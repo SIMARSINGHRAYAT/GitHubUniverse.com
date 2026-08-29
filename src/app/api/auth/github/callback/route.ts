@@ -11,7 +11,7 @@ export async function GET(req: Request) {
     return NextResponse.redirect(new URL("/?error=missing_code", req.url));
   }
 
-  const clientId = process.env.GITHUB_CLIENT_ID || process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
+  const clientId = process.env.GITHUB_CLIENT_ID;
   const clientSecret = process.env.GITHUB_CLIENT_SECRET;
 
   if (!clientId || !clientSecret) {

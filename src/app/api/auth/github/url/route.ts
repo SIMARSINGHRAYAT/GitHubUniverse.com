@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || process.env.GITHUB_CLIENT_ID || "MOCK_CLIENT_ID";
-  const redirectUri = process.env.NEXT_PUBLIC_GITHUB_REDIRECT_URI || "http://localhost:3000/api/auth/github/callback";
+  const clientId = process.env.GITHUB_CLIENT_ID || "MOCK_CLIENT_ID";
+  const redirectUri = process.env.GITHUB_REDIRECT_URI || "http://localhost:3000/api/auth/github/callback";
   const scope = "read:user user:follow public_repo";
   const state = Math.random().toString(36).substring(2, 15);
 
