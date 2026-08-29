@@ -1,0 +1,24 @@
+appId: com.githubuniverse.app
+productName: GitHubUniverse
+copyright: Copyright © 2025 GitHubUniverse Maintainers
+
+directories:
+  output: dist
+  buildResources: build
+
+win:
+  target:
+    - target: msix
+      arch:
+        - x64
+        - arm64
+    - target: appx
+      arch:
+        - x64
+
+msix:
+  identityName: GitHubUniverse.App
+  publisher: CN=GitHubUniverse, O=GitHubUniverse Platform, C=US"
+  publisherDisplayName: GitHubUniverse Maintainers
+  applicationId: GitHubUniverse
+  packageName: GitHubUniverse

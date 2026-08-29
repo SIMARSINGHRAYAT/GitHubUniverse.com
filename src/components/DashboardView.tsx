@@ -1,0 +1,467 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import {
+  GitHubRepository,
+  Collection,
+  SavedRepository,
+  CategoryKey,
+  RankingAlgorithm,
+  UserSession,
+  AppSettings,
+} from "@/lib/types";
+import { RepositoryCard } from "./RepositoryCard";
+import { RepositoryDetailModal } from "./RepositoryDetailModal";
+import { CollectionsView } from "./CollectionsView";
+import { PinnedView } from "./PinnedView";
+import { ExplorerView } from "./ExplorerView";
+import { SettingsView } from "./SettingsView";
+import { GitHubRepositoryService } from "@/lib/github-api";
+import {
+  Search,
+  Flame,
+  Star,
+  Bookmark,
+  Pin,
+  Compass,
+  Settings as SettingsIcon,
+  LogOut,
+  Filter,
+  RefreshCw,
+  SlidersHorizontal,
+} from "lucide-react";
+import { soundManager } from "@/lib/sound";
+
+interface DashboardViewProps {
+  userSession: UserSession;
+  appSettings: AppSettings;
+  onUpdateSettings: (newSettings: Partial<AppSettings>) => void;
+  onLogout: () => void;
+  onOpenMsixInfo: () => void;
+}
+
+export const DashboardView: React.FC<DashboardViewProps> = ({
+  userSession,
+  appSettings,
+  onUpdateSettings,
+  onLogout,
+  onOpenMsixInfo,
+}) => {
+  const [activeTab, setActiveTab] = useState<"HOME" | "EXPLORE" | "COLLECTIONS" | "PINNED" | "SETTINGS">("HOME");
+  const [category, setCategory] = useState<CategoryKey | "ALL">("ALL");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("ALL");
+  const [sortBy, setSortBy] = useState<"stars" | "forks" | "growth" | "updated">("stars");
+
+  // Data State
+  const [repos, setRepos] = useState<GitHubRepository[]>([]);
+  const [explorerRepos, setExplorerRepos] = useState<GitHubRepository[]>([]);
+  const [explorerRanking, setExplorerRanking] = useState<RankingAlgorithm>("TRENDING");
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [savedRepos, setSavedRepos] = useState<SavedRepository[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [explorerLoading, setExplorerLoading] = useState(false);
+  const [selectedRepoModal, setSelectedRepoModal] = useState<GitHubRepository | null>(null);
+
+  // Debounce search query input
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 350);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
+  // Load user's Collections and Saved Repos from backend API
+  const loadUserData = async () => {
+    try {
+      const colRes = await fetch(`/api/collections?userId=${encodeURIComponent(userSession.id)}`);
+      if (colRes.ok) {
+        const colData = await colRes.json();
+        setCollections(colData.collections || []);
+      }
+
+      const savedRes = await fetch(`/api/saved-repos?userId=${encodeURIComponent(userSession.id)}`);
+      if (savedRes.ok) {
+        const savedData = await savedRes.json();
+        setSavedRepos(savedData.savedRepositories || []);
+      }
+    } catch (err) {
+      console.error("Failed to load user collections/saved repos:", err);
+    }
+  };
+
+  useEffect(() => {
+    loadUserData();
+  }, [userSession.id]);
+
+  // Fetch Repositories for HOME view based on Category & Search
+  useEffect(() => {
+    let isMounted = true;
+    const fetchHomeRepos = async () => {
+      setLoading(true);
+      const res = await GitHubRepositoryService.getRepositories({
+        category,
+        query: debouncedQuery,
+        language: selectedLanguage,
+        useLiveApi: appSettings.useLiveApi,
+      });
+      if (isMounted) {
+        setRepos(res.repos);
+        setLoading(false);
+      }
+    };
+
+    fetchHomeRepos();
+    return () => {
+      isMounted = false;
+    };
+  }, [category, debouncedQuery, selectedLanguage, appSettings.useLiveApi]);
+
+  // Fetch Repositories for EXPLORE view based on Ranking Algorithm
+  useEffect(() => {
+    let isMounted = true;
+    const fetchExploreRepos = async () => {
+      if (activeTab !== "EXPLORE") return;
+      setExplorerLoading(true);
+      const res = await GitHubRepositoryService.getRepositories({
+        ranking: explorerRanking,
+        useLiveApi: appSettings.useLiveApi,
+      });
+      if (isMounted) {
+        setExplorerRepos(res.repos);
+        setExplorerLoading(false);
+      }
+    };
+
+    fetchExploreRepos();
+    return () => {
+      isMounted = false;
+    };
+  }, [explorerRanking, activeTab, appSettings.useLiveApi]);
+
+  // Save / Unsave Repo
+  const handleToggleSave = async (repo: GitHubRepository) => {
+    soundManager.playStar();
+    try {
+      const res = await fetch("/api/saved-repos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: userSession.id,
+          repo,
+          action: "save",
+        }),
+      });
+      if (res.ok) {
+        await loadUserData();
+      }
+    } catch (err) {
+      console.error("Error toggling save:", err);
+    }
+  };
+
+  // Pin / Unpin Repo
+  const handleTogglePin = async (repo: GitHubRepository) => {
+    soundManager.playStar();
+    try {
+      const res = await fetch("/api/saved-repos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: userSession.id,
+          repo,
+          action: "toggle_pin",
+        }),
+      });
+      if (res.ok) {
+        await loadUserData();
+      }
+    } catch (err) {
+      console.error("Error toggling pin:", err);
+    }
+  };
+
+  // Create Collection
+  const handleCreateCollection = async (name: string, description?: string) => {
+    try {
+      const res = await fetch("/api/collections", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: userSession.id,
+          name,
+          description,
+        }),
+      });
+      if (res.ok) {
+        await loadUserData();
+      }
+    } catch (err) {
+      console.error("Error creating collection:", err);
+    }
+  };
+
+  // Delete Collection
+  const handleDeleteCollection = async (id: string) => {
+    try {
+      const res = await fetch(`/api/collections?id=${encodeURIComponent(id)}&userId=${encodeURIComponent(userSession.id)}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        await loadUserData();
+      }
+    } catch (err) {
+      console.error("Error deleting collection:", err);
+    }
+  };
+
+  const savedRepoIds = new Set(savedRepos.map((s) => s.repoId));
+  const pinnedRepoIds = new Set(savedRepos.filter((s) => s.isPinned).map((s) => s.repoId));
+
+  const categories: { key: CategoryKey | "ALL"; label: string }[] = [
+    { key: "ALL", label: "ALL DISCOVERIES" },
+    { key: "TRENDING", label: "TRENDING" },
+    { key: "MOST_STARRED", label: "MOST STARRED" },
+    { key: "FAST_GROWING", label: "FAST GROWING" },
+    { key: "AI_ML", label: "AI & ML" },
+    { key: "WEB_DEV", label: "WEB DEV" },
+    { key: "DEV_TOOLS", label: "DEV TOOLS" },
+    { key: "OPEN_SOURCE", label: "OPEN SOURCE" },
+    { key: "MOBILE", label: "MOBILE" },
+    { key: "SYSTEMS", label: "SYSTEMS" },
+    { key: "GAME_DEV", label: "GAME DEV" },
+  ];
+
+  return (
+    <div className="relative z-10 min-h-[calc(100vh-2.5rem)] flex flex-col font-pixel-mono text-white pb-12">
+      {/* Primary Desktop Top Bar Navigation */}
+      <nav className="bg-[#0a0c12] border-b-2 border-gray-800 px-4 py-3 sticky top-9 z-40 flex flex-wrap items-center justify-between gap-3 shadow-md">
+        {/* Navigation Tabs */}
+        <div className="flex items-center space-x-1.5 overflow-x-auto">
+          {[
+            { key: "HOME", label: "HOME", icon: <Flame className="w-3.5 h-3.5 text-orange-400" /> },
+            { key: "EXPLORE", label: "EXPLORE", icon: <Compass className="w-3.5 h-3.5 text-[#00ff66]" /> },
+            {
+              key: "COLLECTIONS",
+              label: `COLLECTION (${savedRepos.length})`,
+              icon: <Bookmark className="w-3.5 h-3.5 text-[#00e5ff]" />,
+            },
+            {
+              key: "PINNED",
+              label: `PINNED (${savedRepos.filter((s) => s.isPinned).length})`,
+              icon: <Pin className="w-3.5 h-3.5 text-[#ffcc00]" />,
+            },
+            { key: "SETTINGS", label: "SETTINGS", icon: <SettingsIcon className="w-3.5 h-3.5 text-gray-400" /> },
+          ].map((tab) => {
+            const isSelected = activeTab === tab.key;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => {
+                  soundManager.playClick();
+                  setActiveTab(tab.key as any);
+                }}
+                className={`px-3 py-1.5 text-xs font-pixel-mono border-2 transition-all flex items-center space-x-1.5 flex-shrink-0 ${
+                  isSelected
+                    ? "bg-[#00ff66]/20 border-[#00ff66] text-[#00ff66]"
+                    : "bg-gray-900 border-gray-800 text-gray-400 hover:border-gray-700 hover:text-white"
+                }`}
+              >
+                {tab.icon}
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Global Search Bar Input */}
+        <div className="flex items-center space-x-2 flex-1 max-w-md min-w-[220px]">
+          <div className="relative w-full">
+            <Search className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-2.5" />
+            <input
+              type="text"
+              placeholder="SEARCH THE GITHUB UNIVERSE..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-black border-2 border-gray-700 pl-8 pr-3 py-1.5 text-xs text-[#00ff66] font-pixel-mono focus:border-[#00ff66] outline-none"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2 top-2 text-xs text-gray-500 hover:text-white"
+              >
+                ×
+              </button>
+            )}
+          </div>
+        </div>
+      </nav>
+
+      {/* Main Content Area */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+        {/* HOME VIEW */}
+        {activeTab === "HOME" && (
+          <div className="space-y-6">
+            {/* Category Sub-Navigation Scrollbar */}
+            <div className="flex items-center space-x-2 overflow-x-auto pb-2 border-b border-gray-800/80">
+              {categories.map((cat) => {
+                const isSelected = category === cat.key;
+                return (
+                  <button
+                    key={cat.key}
+                    onClick={() => {
+                      soundManager.playClick();
+                      setCategory(cat.key);
+                    }}
+                    className={`px-3 py-1.5 text-[11px] font-pixel-heading whitespace-nowrap transition-all border ${
+                      isSelected
+                        ? "bg-[#00ff66] text-black border-[#00ff66] font-bold"
+                        : "bg-gray-900/80 text-gray-300 border-gray-800 hover:border-gray-600"
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Language & Sorting Filters Row */}
+            <div className="flex flex-wrap items-center justify-between gap-3 bg-[#121620] p-3 border border-gray-800 text-xs">
+              <div className="flex items-center space-x-3">
+                <span className="text-gray-400 font-pixel-heading flex items-center space-x-1">
+                  <SlidersHorizontal className="w-3.5 h-3.5 text-[#00ff66]" />
+                  <span>FILTER:</span>
+                </span>
+
+                <select
+                  value={selectedLanguage}
+                  onChange={(e) => setSelectedLanguage(e.target.value)}
+                  className="bg-black border border-gray-700 text-gray-200 px-2 py-1 outline-none font-pixel-mono"
+                >
+                  <option value="ALL">ALL LANGUAGES</option>
+                  <option value="TypeScript">TypeScript</option>
+                  <option value="JavaScript">JavaScript</option>
+                  <option value="Python">Python</option>
+                  <option value="Rust">Rust</option>
+                  <option value="Go">Go</option>
+                  <option value="C++">C++</option>
+                  <option value="Zig">Zig</option>
+                  <option value="Dart">Dart</option>
+                </select>
+              </div>
+
+              <div className="text-[11px] text-gray-400 font-pixel-terminal">
+                SHOWING <strong className="text-[#00ff66]">{repos.length}</strong> PROJECTS IN{" "}
+                <span className="text-white font-bold">{category}</span>
+              </div>
+            </div>
+
+            {/* Repositories Cards Grid */}
+            {loading ? (
+              <div className="p-16 text-center bg-gray-950/80 border-2 border-gray-800">
+                <div className="inline-block w-8 h-8 border-3 border-[#00ff66] border-t-transparent animate-spin mb-3" />
+                <h3 className="text-xs font-pixel-heading text-[#00ff66] animate-pulse">
+                  LOADING GITHUB DATA...
+                </h3>
+                <p className="text-xs text-gray-500 font-pixel-terminal mt-1">
+                  Querying worldwide repository index
+                </p>
+              </div>
+            ) : repos.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {repos.map((repo) => (
+                  <RepositoryCard
+                    key={repo.id}
+                    repo={repo}
+                    onViewDetails={(r) => setSelectedRepoModal(r)}
+                    onToggleSave={handleToggleSave}
+                    onTogglePin={handleTogglePin}
+                    isSaved={savedRepoIds.has(repo.id.toString())}
+                    isPinned={pinnedRepoIds.has(repo.id.toString())}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="p-16 text-center bg-gray-950/80 border-2 border-gray-800 space-y-2">
+                <h3 className="text-sm font-pixel-heading text-gray-300">NO REPOSITORIES FOUND</h3>
+                <p className="text-xs text-gray-500 font-pixel-terminal">
+                  THE GITHUB UNIVERSE IS QUIET HERE FOR "{debouncedQuery || category}".
+                </p>
+                <button
+                  onClick={() => {
+                    setSearchQuery("");
+                    setCategory("ALL");
+                    setSelectedLanguage("ALL");
+                  }}
+                  className="pixel-btn pixel-btn-green text-xs mt-3 inline-block"
+                >
+                  [ SEARCH AGAIN / RESET ]
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* EXPLORE VIEW */}
+        {activeTab === "EXPLORE" && (
+          <ExplorerView
+            repos={explorerRepos}
+            ranking={explorerRanking}
+            onSelectRanking={setExplorerRanking}
+            onViewDetails={(r) => setSelectedRepoModal(r)}
+            onToggleSave={handleToggleSave}
+            onTogglePin={handleTogglePin}
+            savedRepoIds={savedRepoIds}
+            pinnedRepoIds={pinnedRepoIds}
+            loading={explorerLoading}
+          />
+        )}
+
+        {/* COLLECTIONS VIEW */}
+        {activeTab === "COLLECTIONS" && (
+          <CollectionsView
+            collections={collections}
+            savedRepos={savedRepos}
+            onCreateCollection={handleCreateCollection}
+            onDeleteCollection={handleDeleteCollection}
+            onViewDetails={(r) => setSelectedRepoModal(r)}
+            onToggleSave={handleToggleSave}
+            onTogglePin={handleTogglePin}
+          />
+        )}
+
+        {/* PINNED VIEW */}
+        {activeTab === "PINNED" && (
+          <PinnedView
+            savedRepos={savedRepos}
+            onViewDetails={(r) => setSelectedRepoModal(r)}
+            onToggleSave={handleToggleSave}
+            onTogglePin={handleTogglePin}
+          />
+        )}
+
+        {/* SETTINGS VIEW */}
+        {activeTab === "SETTINGS" && (
+          <SettingsView
+            settings={appSettings}
+            onUpdateSettings={onUpdateSettings}
+            userSession={userSession}
+            onLogout={onLogout}
+            onOpenMsixInfo={onOpenMsixInfo}
+          />
+        )}
+      </main>
+
+      {/* Repository Details Modal */}
+      <RepositoryDetailModal
+        repo={selectedRepoModal}
+        onClose={() => setSelectedRepoModal(null)}
+        onToggleSave={handleToggleSave}
+        onTogglePin={handleTogglePin}
+        isSaved={selectedRepoModal ? savedRepoIds.has(selectedRepoModal.id.toString()) : false}
+        isPinned={selectedRepoModal ? pinnedRepoIds.has(selectedRepoModal.id.toString()) : false}
+      />
+    </div>
+  );
+};
