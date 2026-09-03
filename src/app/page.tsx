@@ -16,6 +16,7 @@ type ScreenState = "WELCOME" | "SUPPORT" | "DASHBOARD";
 export default function GitCrazyPage() {
   const [screen, setScreen] = useState<ScreenState>("WELCOME");
   const [showMsixModal, setShowMsixModal] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   // App Settings State
   const [settings, setSettings] = useState<AppSettings>({
@@ -48,11 +49,16 @@ export default function GitCrazyPage() {
           const data = await res.json();
           if (data.user) {
             setUserSession(data.user);
+            if (!data.user.isMock) {
+              setScreen("DASHBOARD");
+            }
+            return data.user;
           }
         }
       } catch (err) {
         console.error("Session load error:", err);
       }
+      return null;
     };
 
     const fetchSettings = async () => {
@@ -71,11 +77,27 @@ export default function GitCrazyPage() {
     };
 
     const params = new URLSearchParams(window.location.search);
-    if (params.get("auth") === "success") {
-      setScreen("DASHBOARD");
+    const authSuccess = params.get("auth") === "success";
+    const authErrorCode = params.get("error");
+
+    if (authErrorCode) {
+      setAuthError("GitHub sign-in failed. Please try again.");
       if (window.history.replaceState) {
-        window.history.replaceState({}, "", window.location.pathname);
+        const cleaned = window.location.search.replace(/[?&]error=[^&]+/, "");
+        const nextUrl = cleaned ? `${window.location.pathname}${cleaned}` : window.location.pathname;
+        window.history.replaceState({}, "", nextUrl);
       }
+    }
+
+    if (authSuccess) {
+      fetchSession().then((session) => {
+        if (session) {
+          setScreen("DASHBOARD");
+        }
+        if (window.history.replaceState) {
+          window.history.replaceState({}, "", window.location.pathname);
+        }
+      });
     }
 
     fetchSession();
@@ -102,6 +124,7 @@ export default function GitCrazyPage() {
 
   // Real OAuth Authorization Redirect Action
   const handleSignInRealOAuth = async () => {
+    setAuthError(null);
     try {
       const res = await fetch("/api/auth/github/url");
       if (!res.ok) {
@@ -110,10 +133,14 @@ export default function GitCrazyPage() {
       }
 
       const data = await res.json();
-      window.location.href = data.url;
+      if (!data?.url) {
+        throw new Error("GitHub OAuth URL missing");
+      }
+
+      window.location.assign(data.url);
     } catch (err) {
       console.error("OAuth redirect error:", err);
-      alert("GitHub OAuth is not configured. Set GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET in your environment.");
+      setAuthError("GitHub OAuth is not configured. Please check the app environment settings.");
     }
   };
 
@@ -207,7 +234,7 @@ export default function GitCrazyPage() {
       />
 
       {/* Screen Views Flow */}
-      {screen === "WELCOME" && <WelcomeScreen onGetStarted={handleSignInRealOAuth} />}
+      {screen === "WELCOME" && <WelcomeScreen onGetStarted={handleSignInRealOAuth} errorMessage={authError} />}
 
       {screen === "SUPPORT" && (
         <SupportScreen
