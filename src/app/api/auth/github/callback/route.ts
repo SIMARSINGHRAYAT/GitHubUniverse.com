@@ -12,6 +12,11 @@ export async function GET(req: Request) {
   const cookieStore = await cookies();
   const expectedState = cookieStore.get("gh_oauth_state")?.value;
 
+  if (url.searchParams.get("error")) {
+    cookieStore.delete("gh_oauth_state");
+    return NextResponse.redirect(new URL("/?error=oauth_cancelled", req.url));
+  }
+
   if (!code) {
     return NextResponse.redirect(new URL("/?error=missing_code", req.url));
   }

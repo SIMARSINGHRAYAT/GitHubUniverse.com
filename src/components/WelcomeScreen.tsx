@@ -23,7 +23,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
     <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-12 text-center select-none">
       <div className="relative z-10 w-full max-w-3xl">
         {errorMessage && (
-          <p className="mb-4 text-[10px] uppercase tracking-[0.2em] text-red-400 font-pixel-mono">
+          <p className="mb-5 text-xs sm:text-sm uppercase tracking-[0.16em] text-red-400 font-pixel-mono">
             {errorMessage}
           </p>
         )}
@@ -32,7 +32,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
           GitHub Universe
         </h1>
 
-        <div className="mt-7 flex items-center justify-center gap-3 text-xs sm:text-base font-pixel-mono uppercase tracking-[0.18em] text-gray-300">
+        <div className="mt-8 flex items-center justify-center gap-3 text-sm sm:text-lg font-pixel-mono uppercase tracking-[0.14em] text-gray-300">
           <span>Discover</span>
           <span className="text-gray-500">•</span>
           <span>Collect</span>
@@ -44,7 +44,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
           <p className="text-base sm:text-lg font-pixel-terminal text-[#d1fae5] italic leading-relaxed">
             “{currentQuote.quote}”
           </p>
-          <p className="mt-3 text-xs sm:text-sm font-pixel-mono text-gray-400">
+          <p className="mt-3 text-sm sm:text-base font-pixel-mono text-gray-400">
             — {currentQuote.author} <span className="text-gray-500">({currentQuote.role})</span>
           </p>
         </div>
@@ -55,7 +55,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             size="lg"
             onClick={onGetStarted}
             disabled={isSigningIn}
-            className="min-w-[220px] tracking-[0.12em] font-pixel-heading"
+            className="min-w-[240px] text-base tracking-[0.1em] font-pixel-heading"
           >
             {isSigningIn ? "Connecting..." : "Get Started"}
           </PixelButton>

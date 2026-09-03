@@ -54,7 +54,7 @@ export const FallingGitHubRain: React.FC<FallingGitHubRainProps> = ({
         drops.push({
           x: i * laneWidth + Math.random() * 10,
           y: Math.random() * -height,
-          speed: (2.5 + Math.random() * 3.5) * speedMultiplier,
+          speed: (1.2 + Math.random() * 1.8) * speedMultiplier,
           size: 15 + Math.floor(Math.random() * 12),
           opacity: 0.25 + Math.random() * 0.65,
           charType: Math.floor(Math.random() * 6),
@@ -133,7 +133,7 @@ export const FallingGitHubRain: React.FC<FallingGitHubRainProps> = ({
         // Reset to top when off screen
         if (drop.y > height + 50) {
           drop.y = -50 - Math.random() * 100;
-          drop.speed = (2.5 + Math.random() * 3.5) * speedMultiplier;
+          drop.speed = (1.2 + Math.random() * 1.8) * speedMultiplier;
           drop.opacity = 0.25 + Math.random() * 0.65;
           drop.charType = Math.floor(Math.random() * 6);
         }

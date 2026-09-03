@@ -24,7 +24,7 @@ export default function GitCrazyPage() {
     soundEnabled: true,
     crtEnabled: true,
     animationsEnabled: true,
-    rainSpeed: 1.8,
+    rainSpeed: 1.2,
     theme: "cyberpunk-green",
     useLiveApi: false,
   });
@@ -82,7 +82,16 @@ export default function GitCrazyPage() {
     const authErrorCode = params.get("error");
 
     if (authErrorCode) {
-      window.setTimeout(() => setAuthError("GitHub sign-in failed. Please try again."), 0);
+      const messages: Record<string, string> = {
+        oauth_cancelled: "GitHub sign-in was cancelled.",
+        invalid_state: "GitHub sign-in expired. Please try again.",
+        oauth_not_configured: "GitHub OAuth is not configured on this deployment.",
+        token_exchange_failed: "GitHub authorization could not be completed.",
+        github_user_lookup_failed: "GitHub account details could not be loaded.",
+        auth_failed: "The server could not complete GitHub sign-in.",
+      };
+      const message = messages[authErrorCode] || "GitHub sign-in failed. Please try again.";
+      window.setTimeout(() => setAuthError(message), 0);
       if (window.history.replaceState) {
         const cleaned = window.location.search.replace(/[?&]error=[^&]+/, "");
         const nextUrl = cleaned ? `${window.location.pathname}${cleaned}` : window.location.pathname;
@@ -154,7 +163,9 @@ export default function GitCrazyPage() {
       setAuthError(
         err instanceof DOMException && err.name === "AbortError"
           ? "GitHub sign-in timed out. Please try again."
-          : "GitHub OAuth is not configured. Please check the app environment settings."
+          : err instanceof Error
+            ? err.message
+            : "GitHub sign-in could not be started. Please try again."
       );
       setIsSigningIn(false);
     }
@@ -246,7 +257,7 @@ export default function GitCrazyPage() {
       {/* Background Falling GitHub Rain Matrix */}
       <FallingGitHubRain
         enabled={settings.animationsEnabled}
-        speedMultiplier={Math.max(settings.rainSpeed, 1.8)}
+        speedMultiplier={Math.max(settings.rainSpeed, 1.2)}
       />
 
       {/* Screen Views Flow */}
