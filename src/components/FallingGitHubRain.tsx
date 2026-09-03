@@ -44,20 +44,20 @@ export const FallingGitHubRain: React.FC<FallingGitHubRainProps> = ({
     window.addEventListener("resize", handleResize);
 
     // Spawn lanes to prevent chaotic overlapping
-    const laneWidth = 40;
+    const laneWidth = 28;
     const numLanes = Math.floor(width / laneWidth);
     const drops: Drop[] = [];
 
     // Initialize drops across lanes
     for (let i = 0; i < numLanes; i++) {
-      if (Math.random() > 0.3) {
+      if (Math.random() > 0.08) {
         drops.push({
           x: i * laneWidth + Math.random() * 10,
           y: Math.random() * -height,
-          speed: (1.5 + Math.random() * 2.5) * speedMultiplier,
-          size: 14 + Math.floor(Math.random() * 10),
+          speed: (2.5 + Math.random() * 3.5) * speedMultiplier,
+          size: 15 + Math.floor(Math.random() * 12),
           opacity: 0.25 + Math.random() * 0.65,
-          charType: Math.floor(Math.random() * 4),
+          charType: Math.floor(Math.random() * 6),
         });
       }
     }
@@ -104,8 +104,15 @@ export const FallingGitHubRain: React.FC<FallingGitHubRainProps> = ({
         ctx.fillStyle = "#00e5ff";
         ctx.font = `${size}px 'Press Start 2P', monospace`;
         ctx.fillText("⑂", x, y);
+      } else if (charType === 4) {
+        ctx.fillStyle = "#ff007f";
+        ctx.font = `${size}px 'VT323', monospace`;
+        ctx.fillText("$>", x, y);
+      } else if (charType === 5) {
+        ctx.fillStyle = "#a7f3d0";
+        ctx.font = `${size}px 'VT323', monospace`;
+        ctx.fillText("{ }", x, y);
       } else {
-        // Code Brackets { }
         ctx.fillStyle = "#ffffff";
         ctx.font = `${size - 2}px 'VT323', monospace`;
         ctx.fillText("<git/>", x, y);
@@ -126,9 +133,9 @@ export const FallingGitHubRain: React.FC<FallingGitHubRainProps> = ({
         // Reset to top when off screen
         if (drop.y > height + 50) {
           drop.y = -50 - Math.random() * 100;
-          drop.speed = (1.5 + Math.random() * 2.5) * speedMultiplier;
+          drop.speed = (2.5 + Math.random() * 3.5) * speedMultiplier;
           drop.opacity = 0.25 + Math.random() * 0.65;
-          drop.charType = Math.floor(Math.random() * 4);
+          drop.charType = Math.floor(Math.random() * 6);
         }
       });
 

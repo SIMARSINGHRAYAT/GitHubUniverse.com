@@ -24,7 +24,7 @@ export default function GitCrazyPage() {
     soundEnabled: true,
     crtEnabled: true,
     animationsEnabled: true,
-    rainSpeed: 1,
+    rainSpeed: 1.8,
     theme: "cyberpunk-green",
     useLiveApi: false,
   });
@@ -132,7 +132,11 @@ export default function GitCrazyPage() {
     try {
       const controller = new AbortController();
       const timeoutId = window.setTimeout(() => controller.abort(), 10000);
-      const res = await fetch("/api/auth/github/url", { signal: controller.signal });
+      const res = await fetch("/api/auth/github/url", {
+        signal: controller.signal,
+        credentials: "same-origin",
+        cache: "no-store",
+      });
       window.clearTimeout(timeoutId);
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
@@ -242,7 +246,7 @@ export default function GitCrazyPage() {
       {/* Background Falling GitHub Rain Matrix */}
       <FallingGitHubRain
         enabled={settings.animationsEnabled}
-        speedMultiplier={settings.rainSpeed}
+        speedMultiplier={Math.max(settings.rainSpeed, 1.8)}
       />
 
       {/* Screen Views Flow */}

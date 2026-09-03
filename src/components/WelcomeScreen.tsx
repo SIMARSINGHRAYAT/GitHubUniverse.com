@@ -28,11 +28,11 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
           </p>
         )}
 
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-pixel-heading tracking-[0.12em] text-white leading-none">
+        <h1 className="text-4xl sm:text-6xl md:text-7xl font-pixel-heading tracking-[0.12em] text-white leading-none">
           GitHub Universe
         </h1>
 
-        <div className="mt-6 flex items-center justify-center gap-3 text-[10px] sm:text-sm font-pixel-mono uppercase tracking-[0.18em] text-gray-300">
+        <div className="mt-7 flex items-center justify-center gap-3 text-xs sm:text-base font-pixel-mono uppercase tracking-[0.18em] text-gray-300">
           <span>Discover</span>
           <span className="text-gray-500">•</span>
           <span>Collect</span>
@@ -41,10 +41,10 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
         </div>
 
         <div className="mt-8 mx-auto max-w-2xl text-center">
-          <p className="text-sm sm:text-base font-pixel-terminal text-[#d1fae5] italic leading-relaxed">
+          <p className="text-base sm:text-lg font-pixel-terminal text-[#d1fae5] italic leading-relaxed">
             “{currentQuote.quote}”
           </p>
-          <p className="mt-3 text-[10px] sm:text-xs font-pixel-mono text-gray-400">
+          <p className="mt-3 text-xs sm:text-sm font-pixel-mono text-gray-400">
             — {currentQuote.author} <span className="text-gray-500">({currentQuote.role})</span>
           </p>
         </div>
