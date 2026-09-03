@@ -240,14 +240,7 @@ export default function GitCrazyPage() {
   return (
     <div className="min-h-screen bg-[#050508] text-white selection:bg-[#00ff66] selection:text-black relative overflow-x-hidden font-pixel-mono">
       {screen !== "WELCOME" && (
-        <PixelTitleBar
-          soundEnabled={settings.soundEnabled}
-          setSoundEnabled={(val) => handleUpdateSettings({ soundEnabled: val })}
-          crtEnabled={settings.crtEnabled}
-          setCrtEnabled={(val) => handleUpdateSettings({ crtEnabled: val })}
-          onOpenMsixInfo={() => setShowMsixModal(true)}
-          username={userSession?.username}
-        />
+        <PixelTitleBar onLogout={handleLogout} />
       )}
 
       {/* CRT Display Scanline Overlay */}

@@ -236,7 +236,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   return (
     <div className="relative z-10 min-h-[calc(100vh-2.5rem)] flex flex-col font-pixel-mono text-white pb-12">
       {/* Primary Desktop Top Bar Navigation */}
-      <nav className="bg-[#0a0c12] border-b-2 border-gray-800 px-4 py-3 sticky top-9 z-40 flex flex-wrap items-center justify-between gap-3 shadow-md">
+      <nav className="grid grid-cols-1 items-center gap-4 border-b border-white/10 bg-black/65 px-5 py-4 sticky top-14 z-40 md:grid-cols-[1fr_minmax(280px,620px)_1fr] md:gap-6">
         {/* Navigation Tabs */}
         <div className="flex items-center space-x-1.5 overflow-x-auto">
           {[
@@ -265,7 +265,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 className={`px-3 py-1.5 text-xs font-pixel-mono border-2 transition-all flex items-center space-x-1.5 flex-shrink-0 ${
                   isSelected
                     ? "bg-[#00ff66]/20 border-[#00ff66] text-[#00ff66]"
-                    : "bg-gray-900 border-gray-800 text-gray-400 hover:border-gray-700 hover:text-white"
+                        : "bg-black/60 border-white/15 text-gray-400 hover:border-gray-500 hover:text-white"
                 }`}
               >
                 {tab.icon}
@@ -276,7 +276,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Global Search Bar Input */}
-        <div className="flex items-center space-x-2 flex-1 max-w-md min-w-[220px]">
+        <div className="flex items-center space-x-2 min-w-0">
           <div className="relative w-full">
             <Search className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-2.5" />
             <input
@@ -284,7 +284,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               placeholder="SEARCH THE GITHUB UNIVERSE..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-black border-2 border-gray-700 pl-8 pr-3 py-1.5 text-xs text-[#00ff66] font-pixel-mono focus:border-[#00ff66] outline-none"
+              className="w-full border border-white/20 bg-black/70 pl-9 pr-3 py-2 text-sm text-[#00ff66] font-pixel-mono focus:border-[#00ff66] outline-none"
             />
             {searchQuery && (
               <button
@@ -299,7 +299,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       </nav>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+      <main className="mx-auto w-full max-w-[1800px] flex-1 space-y-8 px-5 py-6 sm:px-8 lg:px-12">
         {/* HOME VIEW */}
         {activeTab === "HOME" && (
           <div className="space-y-6">
@@ -317,7 +317,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     className={`px-3 py-1.5 text-[11px] font-pixel-heading whitespace-nowrap transition-all border ${
                       isSelected
                         ? "bg-[#00ff66] text-black border-[#00ff66] font-bold"
-                        : "bg-gray-900/80 text-gray-300 border-gray-800 hover:border-gray-600"
+                        : "bg-black/60 text-gray-300 border-white/15 hover:border-gray-500"
                     }`}
                   >
                     {cat.label}
@@ -327,7 +327,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             {/* Language & Sorting Filters Row */}
-            <div className="flex flex-wrap items-center justify-between gap-3 bg-[#121620] p-3 border border-gray-800 text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-4 border border-white/10 bg-black/60 p-4 text-sm">
               <div className="flex items-center space-x-3">
                 <span className="text-gray-400 font-pixel-heading flex items-center space-x-1">
                   <SlidersHorizontal className="w-3.5 h-3.5 text-[#00ff66]" />
@@ -369,7 +369,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </p>
               </div>
             ) : repos.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                 {repos.map((repo) => (
                   <RepositoryCard
                     key={repo.id}

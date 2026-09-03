@@ -61,7 +61,7 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
   };
 
   return (
-    <div className="pixel-card p-4 flex flex-col justify-between relative group text-left">
+    <div className="pixel-card min-h-[260px] bg-black/65 p-5 flex flex-col justify-between relative group text-left">
       {/* Top Header: Owner Avatar & Full Name & Pinned Badge */}
       <div>
         <div className="flex items-start justify-between mb-2 gap-2">
