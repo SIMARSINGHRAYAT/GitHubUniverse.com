@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { getGitHubRedirectUri } from "@/lib/github-config";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -49,7 +48,6 @@ export async function GET(req: Request) {
         client_id: clientId,
         client_secret: clientSecret,
         code,
-        redirect_uri: getGitHubRedirectUri(req.url),
       }),
     });
 
