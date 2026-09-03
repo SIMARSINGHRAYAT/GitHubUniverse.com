@@ -43,15 +43,15 @@ export default function GitCrazyPage() {
 
   // Load Session and Settings from API on mount
   useEffect(() => {
-    const fetchSession = async () => {
+    const fetchSession = async (destination?: ScreenState) => {
       try {
         const res = await fetch("/api/auth/session");
         if (res.ok) {
           const data = await res.json();
           if (data.user) {
             setUserSession(data.user);
-            if (!data.user.isMock) {
-              setScreen("DASHBOARD");
+            if (!data.user.isMock && destination) {
+              setScreen(destination);
             }
             return data.user;
           }
@@ -102,10 +102,7 @@ export default function GitCrazyPage() {
     }
 
     if (authSuccess) {
-      fetchSession().then((session) => {
-        if (session) {
-          setScreen("DASHBOARD");
-        }
+      fetchSession("SUPPORT").then((session) => {
         if (window.history.replaceState) {
           window.history.replaceState({}, "", window.location.pathname);
         }
@@ -113,7 +110,7 @@ export default function GitCrazyPage() {
     }
 
     if (!authSuccess) {
-      fetchSession();
+      fetchSession("DASHBOARD");
     }
     fetchSettings();
   }, []);

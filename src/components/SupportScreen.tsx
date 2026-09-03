@@ -97,7 +97,7 @@ export const SupportScreen: React.FC<SupportScreenProps> = ({
                 <div>
                   <h4 className="text-xs font-pixel-heading text-white">1. STAR THE REPOSITORY</h4>
                   <span className="text-[11px] text-gray-400 font-pixel-terminal">
-                    gitcrazy/git-crazy on GitHub
+                    SIMARSINGHRAYAT/GitHubUniverse.com on GitHub
                   </span>
                 </div>
               </div>
@@ -142,7 +142,7 @@ export const SupportScreen: React.FC<SupportScreenProps> = ({
                 <div>
                   <h4 className="text-xs font-pixel-heading text-white">2. FOLLOW THE MAINTAINER</h4>
                   <span className="text-[11px] text-gray-400 font-pixel-terminal">
-                    @gitcrazy maintainer profile
+                    @SIMARSINGHRAYAT maintainer profile
                   </span>
                 </div>
               </div>

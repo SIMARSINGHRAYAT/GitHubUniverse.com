@@ -1,5 +1,5 @@
-export const GITHUB_MAINTAINER_PROFILE_URL = "https://github.com/gitcrazy";
-export const STARTER_REPOSITORY_URL = "https://github.com/gitcrazy/git-crazy";
+export const GITHUB_MAINTAINER_PROFILE_URL = "https://github.com/SIMARSINGHRAYAT";
+export const STARTER_REPOSITORY_URL = "https://github.com/SIMARSINGHRAYAT/GitHubUniverse.com";
 
 export function getGitHubRedirectUri(requestUrl?: string): string {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
