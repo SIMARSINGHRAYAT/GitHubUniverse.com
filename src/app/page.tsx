@@ -182,12 +182,14 @@ export default function GitCrazyPage() {
           value: true,
         }),
       });
-      if (res.ok) {
-        setUserSession((prev) => ({ ...prev, starredRepo: true }));
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "GitHub could not star the repository.");
       }
+      setUserSession((prev) => ({ ...prev, starredRepo: true }));
     } catch (err) {
       console.error("Support star error:", err);
-      setUserSession((prev) => ({ ...prev, starredRepo: true }));
+      throw err;
     }
   };
 
@@ -203,12 +205,14 @@ export default function GitCrazyPage() {
           value: true,
         }),
       });
-      if (res.ok) {
-        setUserSession((prev) => ({ ...prev, followedMaintainer: true }));
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "GitHub could not follow the profile.");
       }
+      setUserSession((prev) => ({ ...prev, followedMaintainer: true }));
     } catch (err) {
       console.error("Support follow error:", err);
-      setUserSession((prev) => ({ ...prev, followedMaintainer: true }));
+      throw err;
     }
   };
 

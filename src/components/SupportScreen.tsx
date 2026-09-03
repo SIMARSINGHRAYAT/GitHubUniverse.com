@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Star, UserPlus, CheckCircle2, Lock, Unlock, Sparkles, ArrowRight } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Star, UserPlus, CheckCircle2, Lock, Unlock, ArrowRight } from "lucide-react";
 import { PixelButton } from "./PixelButton";
 import { soundManager } from "@/lib/sound";
-import { GITHUB_MAINTAINER_PROFILE_URL, STARTER_REPOSITORY_URL } from "@/lib/github-config";
 
 interface SupportScreenProps {
   userId: string;
@@ -25,36 +24,47 @@ export const SupportScreen: React.FC<SupportScreenProps> = ({
 }) => {
   const [starring, setStarring] = useState(false);
   const [following, setFollowing] = useState(false);
-  const [justUnlocked, setJustUnlocked] = useState(false);
+  const unlockSoundPlayed = useRef(false);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const isUnlocked = hasStarred && hasFollowed;
 
   useEffect(() => {
-    if (isUnlocked && !justUnlocked) {
-      setJustUnlocked(true);
+    if (isUnlocked && !unlockSoundPlayed.current) {
+      unlockSoundPlayed.current = true;
       soundManager.playUnlock();
     }
-  }, [isUnlocked, justUnlocked]);
+  }, [isUnlocked]);
 
   const handleStarClick = async () => {
     soundManager.playStar();
-    window.open(STARTER_REPOSITORY_URL, "_blank", "noopener,noreferrer");
+    setActionError(null);
     setStarring(true);
-    await onStar();
-    setStarring(false);
+    try {
+      await onStar();
+    } catch (error) {
+      setActionError(error instanceof Error ? error.message : "Unable to star the repository.");
+    } finally {
+      setStarring(false);
+    }
   };
 
   const handleFollowClick = async () => {
     soundManager.playClick();
-    window.open(GITHUB_MAINTAINER_PROFILE_URL, "_blank", "noopener,noreferrer");
+    setActionError(null);
     setFollowing(true);
-    await onFollow();
-    setFollowing(false);
+    try {
+      await onFollow();
+    } catch (error) {
+      setActionError(error instanceof Error ? error.message : "Unable to follow the profile.");
+    } finally {
+      setFollowing(false);
+    }
   };
 
   return (
     <div className="relative z-10 min-h-[calc(100vh-2.5rem)] flex flex-col items-center justify-center p-6 text-center select-none font-pixel-mono">
-      <div className="pixel-panel max-w-xl w-full p-8 sm:p-10 relative bg-[#0a0c12]/95 border-3 border-[#ffcc00] shadow-[10px_10px_0px_#000000]">
+      <div className="pixel-panel max-w-xl w-full p-8 sm:p-10 relative bg-black/65 border border-white/20 shadow-[10px_10px_0px_#000000]">
         
         {/* Header Badge */}
         <div className="inline-block bg-[#ffcc00]/10 border border-[#ffcc00] text-[#ffcc00] px-3 py-1 text-xs font-pixel-heading mb-4">
@@ -73,6 +83,12 @@ export const SupportScreen: React.FC<SupportScreenProps> = ({
           STAR OUR REPOSITORY AND FOLLOW THE MAINTAINER TO SHOW YOUR SUPPORT.
         </p>
 
+        {actionError && (
+          <p className="mb-6 border border-red-400/60 bg-black/60 px-3 py-2 text-xs text-red-300">
+            {actionError}
+          </p>
+        )}
+
         {/* Support Action Cards */}
         <div className="space-y-4 mb-8 text-left">
           {/* Action 1: Star Repo */}
@@ -80,7 +96,7 @@ export const SupportScreen: React.FC<SupportScreenProps> = ({
             className={`p-4 border-2 transition-all ${
               hasStarred
                 ? "bg-[#00ff66]/10 border-[#00ff66]"
-                : "bg-[#121620] border-gray-800 hover:border-gray-700"
+                : "bg-black/55 border-white/15 hover:border-gray-500"
             }`}
           >
             <div className="flex items-center justify-between">
@@ -125,7 +141,7 @@ export const SupportScreen: React.FC<SupportScreenProps> = ({
             className={`p-4 border-2 transition-all ${
               hasFollowed
                 ? "bg-[#00ff66]/10 border-[#00ff66]"
-                : "bg-[#121620] border-gray-800 hover:border-gray-700"
+                : "bg-black/55 border-white/15 hover:border-gray-500"
             }`}
           >
             <div className="flex items-center justify-between">
