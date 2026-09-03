@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { createOAuthState } from "@/lib/github-oauth-state";
 
 export async function GET(req: Request) {
   const clientId = process.env.GITHUB_CLIENT_ID;
@@ -11,8 +12,16 @@ export async function GET(req: Request) {
     );
   }
 
+  const clientSecret = process.env.GITHUB_CLIENT_SECRET;
+  if (!clientSecret) {
+    return NextResponse.json(
+      { error: "Missing GITHUB_CLIENT_SECRET environment variable." },
+      { status: 500 }
+    );
+  }
+
   const cookieStore = await cookies();
-  const state = Math.random().toString(36).slice(2, 18);
+  const state = createOAuthState(clientSecret);
   cookieStore.set("gh_oauth_state", state, {
     httpOnly: true,
     sameSite: "lax",

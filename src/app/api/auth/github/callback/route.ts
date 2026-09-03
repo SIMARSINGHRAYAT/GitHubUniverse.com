@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { isValidOAuthState } from "@/lib/github-oauth-state";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -20,7 +21,12 @@ export async function GET(req: Request) {
     return NextResponse.redirect(new URL("/?error=missing_code", req.url));
   }
 
-  if (!state || !expectedState || state !== expectedState) {
+  const clientSecret = process.env.GITHUB_CLIENT_SECRET;
+  const stateIsValid = Boolean(
+    state && clientSecret && isValidOAuthState(state, clientSecret) && (!expectedState || state === expectedState)
+  );
+
+  if (!stateIsValid) {
     cookieStore.delete("gh_oauth_state");
     return NextResponse.redirect(new URL("/?error=invalid_state", req.url));
   }
@@ -28,8 +34,6 @@ export async function GET(req: Request) {
   cookieStore.delete("gh_oauth_state");
 
   const clientId = process.env.GITHUB_CLIENT_ID;
-  const clientSecret = process.env.GITHUB_CLIENT_SECRET;
-
   if (!clientId || !clientSecret) {
     return NextResponse.redirect(new URL("/?error=oauth_not_configured", req.url));
   }
