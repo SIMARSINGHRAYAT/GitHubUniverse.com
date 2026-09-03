@@ -88,6 +88,8 @@ export default function GitCrazyPage() {
         oauth_not_configured: "GitHub OAuth is not configured on this deployment.",
         token_exchange_failed: "GitHub authorization could not be completed.",
         github_user_lookup_failed: "GitHub account details could not be loaded.",
+        github_request_timeout: "GitHub took too long to respond. Please try again.",
+        database_error: "The app database could not save your GitHub account. Please check the deployment database setup.",
         auth_failed: "The server could not complete GitHub sign-in.",
       };
       const message = messages[authErrorCode] || "GitHub sign-in failed. Please try again.";

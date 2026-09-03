@@ -36,7 +36,10 @@ export async function GET(req: Request) {
   }
 
   try {
-    const tokenRes = await fetch("https://github.com/login/oauth/access_token", {
+    const githubRequest = (input: string, init: RequestInit = {}) =>
+      fetch(input, { ...init, signal: AbortSignal.timeout(15000) });
+
+    const tokenRes = await githubRequest("https://github.com/login/oauth/access_token", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +60,7 @@ export async function GET(req: Request) {
 
     const accessToken = tokenData.access_token;
 
-    const userRes = await fetch("https://api.github.com/user", {
+    const userRes = await githubRequest("https://api.github.com/user", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "User-Agent": "GitHubUniverse-App",
@@ -118,6 +121,9 @@ export async function GET(req: Request) {
     return response;
   } catch (err) {
     console.error("GitHub OAuth Callback error:", err);
-    return NextResponse.redirect(new URL("/?error=auth_failed", req.url));
+    const errorCode = err instanceof Error && err.name === "TimeoutError"
+      ? "github_request_timeout"
+      : "database_error";
+    return NextResponse.redirect(new URL(`/?error=${errorCode}`, req.url));
   }
 }
