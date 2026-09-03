@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getGitHubRedirectUri } from "@/lib/github-config";
 
-export async function GET() {
+export async function GET(req: Request) {
   const clientId = process.env.GITHUB_CLIENT_ID;
 
   if (!clientId) {
@@ -22,7 +22,7 @@ export async function GET() {
     maxAge: 60 * 10,
   });
 
-  const redirectUri = getGitHubRedirectUri();
+  const redirectUri = getGitHubRedirectUri(req.url);
   const scope = "read:user user:follow public_repo";
   const authUrl = `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(
     clientId

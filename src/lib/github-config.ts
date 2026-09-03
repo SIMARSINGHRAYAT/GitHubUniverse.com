@@ -2,8 +2,31 @@ export const GITHUB_MAINTAINER_PROFILE_URL = "https://github.com/gitcrazy";
 export const STARTER_REPOSITORY_URL = "https://github.com/gitcrazy/git-crazy";
 
 export function getGitHubRedirectUri(requestUrl?: string): string {
-  const configured = process.env.GITHUB_REDIRECT_URI || process.env.NEXT_PUBLIC_GITHUB_REDIRECT_URI;
-  if (configured) return configured;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (siteUrl) {
+    try {
+      const url = new URL(siteUrl.startsWith("http") ? siteUrl : `https://${siteUrl}`);
+      url.pathname = "/api/auth/github/callback";
+      url.search = "";
+      url.hash = "";
+      return url.toString().replace(/\/$/, "");
+    } catch {
+      // Fall through to the explicit callback URL.
+    }
+  }
+
+  const configured = (process.env.GITHUB_REDIRECT_URI || process.env.NEXT_PUBLIC_GITHUB_REDIRECT_URI)?.trim();
+  if (configured) {
+    try {
+      const url = new URL(configured);
+      url.pathname = "/api/auth/github/callback";
+      url.search = "";
+      url.hash = "";
+      return url.toString().replace(/\/$/, "");
+    } catch {
+      // Ignore malformed environment values and resolve from the request URL.
+    }
+  }
 
   if (typeof requestUrl === "string" && requestUrl) {
     try {
@@ -14,9 +37,9 @@ export function getGitHubRedirectUri(requestUrl?: string): string {
     }
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL;
-  if (siteUrl) {
-    const base = siteUrl.startsWith("http") ? siteUrl : `https://${siteUrl}`;
+  const vercelUrl = process.env.VERCEL_URL;
+  if (vercelUrl) {
+    const base = vercelUrl.startsWith("http") ? vercelUrl : `https://${vercelUrl}`;
     return `${base.replace(/\/$/, "")}/api/auth/github/callback`;
   }
 
