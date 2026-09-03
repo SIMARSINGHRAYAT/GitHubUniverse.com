@@ -41,13 +41,13 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
   return (
     <div className="space-y-6 font-pixel-mono">
       {/* Title */}
-      <div className="bg-[#121620] border-2 border-[#00ff66] p-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-black/65 border border-[#00ff66]/70 p-5 flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-pixel-heading text-[#00ff66] flex items-center space-x-2">
             <Compass className="w-5 h-5 text-[#00ff66]" />
             <span>GLOBAL REPOSITORY EXPLORER</span>
           </h2>
-          <p className="text-xs text-gray-400 font-pixel-terminal mt-1">
+          <p className="text-sm text-gray-400 font-pixel-terminal mt-1">
             DISCOVER REMARKABLE OPEN-SOURCE PROJECTS AROUND THE WORLD
           </p>
         </div>
@@ -71,7 +71,7 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
               className={`p-3 text-left border-2 transition-all font-pixel-mono ${
                 isSelected
                   ? "bg-[#00ff66]/15 border-[#00ff66] text-white"
-                  : "bg-gray-900 border-gray-800 text-gray-400 hover:border-gray-700"
+                  : "bg-black/60 border-white/15 text-gray-400 hover:border-gray-500"
               }`}
             >
               <div className="flex items-center space-x-1.5 mb-1">
@@ -96,7 +96,7 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
           </p>
         </div>
       ) : repos.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
           {repos.map((repo) => (
             <RepositoryCard
               key={repo.id}

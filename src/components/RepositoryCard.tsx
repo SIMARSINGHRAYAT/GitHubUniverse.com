@@ -61,7 +61,7 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
   };
 
   return (
-    <div className="pixel-card min-h-[260px] bg-black/65 p-5 flex flex-col justify-between relative group text-left">
+    <div className="pixel-card min-h-[290px] bg-black/65 p-6 flex flex-col justify-between relative group text-left">
       {/* Top Header: Owner Avatar & Full Name & Pinned Badge */}
       <div>
         <div className="flex items-start justify-between mb-2 gap-2">
@@ -76,10 +76,10 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
               }}
             />
             <div className="truncate">
-              <span className="text-[11px] text-gray-400 block truncate font-pixel-mono">
+              <span className="text-sm text-gray-400 block truncate font-pixel-mono">
                 {repo.owner.login} /
               </span>
-              <h3 className="text-sm font-bold text-white group-hover:text-[#00ff66] transition-colors truncate font-pixel-mono">
+              <h3 className="text-base font-bold text-white group-hover:text-[#00ff66] transition-colors truncate font-pixel-mono">
                 {repo.name}
               </h3>
             </div>
@@ -101,7 +101,7 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
         </div>
 
         {/* Description */}
-        <p className="text-xs text-gray-300 mb-3 line-clamp-2 leading-relaxed font-pixel-terminal min-h-[2.5rem]">
+        <p className="text-sm text-gray-300 mb-4 line-clamp-3 leading-relaxed font-pixel-terminal min-h-[3.5rem]">
           {repo.description || "No description provided for this GitHub project."}
         </p>
 

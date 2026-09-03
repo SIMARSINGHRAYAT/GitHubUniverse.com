@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   GitHubRepository,
   Collection,
@@ -25,9 +25,6 @@ import {
   Pin,
   Compass,
   Settings as SettingsIcon,
-  LogOut,
-  Filter,
-  RefreshCw,
   SlidersHorizontal,
 } from "lucide-react";
 import { soundManager } from "@/lib/sound";
@@ -73,7 +70,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   }, [searchQuery]);
 
   // Load user's Collections and Saved Repos from backend API
-  const loadUserData = async () => {
+  const loadUserData = useCallback(async () => {
     try {
       const colRes = await fetch(`/api/collections?userId=${encodeURIComponent(userSession.id)}`);
       if (colRes.ok) {
@@ -89,11 +86,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     } catch (err) {
       console.error("Failed to load user collections/saved repos:", err);
     }
-  };
+  }, [userSession.id]);
 
   useEffect(() => {
-    loadUserData();
-  }, [userSession.id]);
+    const timer = window.setTimeout(() => {
+      void loadUserData();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [loadUserData]);
 
   // Fetch Repositories for HOME view based on Category & Search
   useEffect(() => {
@@ -104,7 +104,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         category,
         query: debouncedQuery,
         language: selectedLanguage,
-        useLiveApi: appSettings.useLiveApi,
+        useLiveApi: true,
       });
       if (isMounted) {
         setRepos(res.repos);
@@ -126,7 +126,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       setExplorerLoading(true);
       const res = await GitHubRepositoryService.getRepositories({
         ranking: explorerRanking,
-        useLiveApi: appSettings.useLiveApi,
+        useLiveApi: true,
       });
       if (isMounted) {
         setExplorerRepos(res.repos);
@@ -154,7 +154,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         }),
       });
       if (res.ok) {
-        await loadUserData();
+        const data = await res.json();
+        if (data.removed) {
+          setSavedRepos((current) => current.filter((item) => item.repoId !== repo.id.toString()));
+        } else if (data.savedRepo) {
+          setSavedRepos((current) => [
+            ...current.filter((item) => item.repoId !== repo.id.toString()),
+            data.savedRepo,
+          ]);
+        }
       }
     } catch (err) {
       console.error("Error toggling save:", err);
@@ -262,7 +270,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   soundManager.playClick();
                   setActiveTab(tab.key as any);
                 }}
-                className={`px-3 py-1.5 text-xs font-pixel-mono border-2 transition-all flex items-center space-x-1.5 flex-shrink-0 ${
+                  className={`px-3 py-2 text-sm font-pixel-mono border-2 transition-all flex items-center space-x-1.5 flex-shrink-0 ${
                   isSelected
                     ? "bg-[#00ff66]/20 border-[#00ff66] text-[#00ff66]"
                         : "bg-black/60 border-white/15 text-gray-400 hover:border-gray-500 hover:text-white"
@@ -314,7 +322,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       soundManager.playClick();
                       setCategory(cat.key);
                     }}
-                    className={`px-3 py-1.5 text-[11px] font-pixel-heading whitespace-nowrap transition-all border ${
+                    className={`px-3 py-2 text-sm font-pixel-heading whitespace-nowrap transition-all border ${
                       isSelected
                         ? "bg-[#00ff66] text-black border-[#00ff66] font-bold"
                         : "bg-black/60 text-gray-300 border-white/15 hover:border-gray-500"
@@ -329,7 +337,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {/* Language & Sorting Filters Row */}
             <div className="flex flex-wrap items-center justify-between gap-4 border border-white/10 bg-black/60 p-4 text-sm">
               <div className="flex items-center space-x-3">
-                <span className="text-gray-400 font-pixel-heading flex items-center space-x-1">
+                  <span className="text-sm text-gray-400 font-pixel-heading flex items-center space-x-1">
                   <SlidersHorizontal className="w-3.5 h-3.5 text-[#00ff66]" />
                   <span>FILTER:</span>
                 </span>
@@ -369,7 +377,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </p>
               </div>
             ) : repos.length > 0 ? (
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {repos.map((repo) => (
                   <RepositoryCard
                     key={repo.id}
@@ -386,7 +394,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <div className="p-16 text-center bg-gray-950/80 border-2 border-gray-800 space-y-2">
                 <h3 className="text-sm font-pixel-heading text-gray-300">NO REPOSITORIES FOUND</h3>
                 <p className="text-xs text-gray-500 font-pixel-terminal">
-                  THE GITHUB UNIVERSE IS QUIET HERE FOR "{debouncedQuery || category}".
+                  THE GITHUB UNIVERSE IS QUIET HERE FOR &quot;{debouncedQuery || category}&quot;.
                 </p>
                 <button
                   onClick={() => {

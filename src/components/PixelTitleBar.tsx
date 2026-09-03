@@ -5,10 +5,14 @@ import { LogOut, Settings } from "lucide-react";
 
 interface PixelTitleBarProps {
   onLogout: () => void;
+  username?: string;
+  avatarUrl?: string;
 }
 
 export const PixelTitleBar: React.FC<PixelTitleBarProps> = ({
   onLogout,
+  username,
+  avatarUrl,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
 
@@ -22,12 +26,21 @@ export const PixelTitleBar: React.FC<PixelTitleBarProps> = ({
           aria-expanded={showMenu}
           aria-label="Open settings"
         >
-          <Settings className="h-4 w-4" />
+          {avatarUrl ? <img src={avatarUrl} alt="" className="h-5 w-5 border border-[#00ff66] object-cover" /> : <Settings className="h-4 w-4" />}
           <span>SETTINGS</span>
         </button>
 
         {showMenu && (
-          <div className="absolute right-0 top-full mt-2 w-44 border border-white/20 bg-black/95 p-2 shadow-[4px_4px_0_#00ff66]">
+          <div className="absolute right-0 top-full mt-2 w-56 border border-white/20 bg-black/95 p-2 shadow-[4px_4px_0_#00ff66]">
+            <button
+              type="button"
+              onClick={() => username && window.location.assign(`https://github.com/${encodeURIComponent(username)}`)}
+              className="mb-1 flex w-full items-center gap-3 border-b border-white/10 px-3 py-3 text-left transition-colors hover:bg-white/10"
+              disabled={!username}
+            >
+              {avatarUrl && <img src={avatarUrl} alt="" className="h-9 w-9 border border-[#00ff66] object-cover" />}
+              <span className="truncate text-sm text-white">@{username || "github-user"}</span>
+            </button>
             <button
               type="button"
               onClick={onLogout}

@@ -57,7 +57,7 @@ export const CollectionsView: React.FC<CollectionsViewProps> = ({
   return (
     <div className="space-y-6 font-pixel-mono">
       {/* Top Title Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 bg-[#121620] border-2 border-gray-800 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 bg-black/65 border border-white/15 p-5">
         <div>
           <h2 className="text-xl font-pixel-heading text-[#00e5ff] flex items-center space-x-2">
             <Bookmark className="w-5 h-5 text-[#00e5ff]" />
@@ -137,7 +137,7 @@ export const CollectionsView: React.FC<CollectionsViewProps> = ({
           className={`px-3 py-1.5 text-xs font-pixel-mono border-2 transition-all ${
             selectedColId === "ALL"
               ? "bg-[#00e5ff]/20 border-[#00e5ff] text-[#00e5ff]"
-              : "bg-gray-900 border-gray-800 text-gray-400 hover:border-gray-700"
+              : "bg-black/60 border-white/15 text-gray-400 hover:border-gray-500"
           }`}
         >
           ALL SAVED ({savedRepos.length})
@@ -155,7 +155,7 @@ export const CollectionsView: React.FC<CollectionsViewProps> = ({
                 className={`px-3 py-1.5 text-xs font-pixel-mono border-2 transition-all flex items-center space-x-1.5 ${
                   isSelected
                     ? "bg-[#00ff66]/20 border-[#00ff66] text-[#00ff66]"
-                    : "bg-gray-900 border-gray-800 text-gray-300 hover:border-gray-700"
+                    : "bg-black/60 border-white/15 text-gray-300 hover:border-gray-500"
                 }`}
               >
                 <Folder className="w-3.5 h-3.5" />
@@ -189,13 +189,13 @@ export const CollectionsView: React.FC<CollectionsViewProps> = ({
           placeholder="Filter saved repositories by name or topic..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-gray-950 border-2 border-gray-800 pl-9 pr-4 py-2 text-xs font-pixel-mono text-white focus:border-[#00e5ff] outline-none"
+          className="w-full bg-black/65 border border-white/15 pl-9 pr-4 py-3 text-sm font-pixel-mono text-white focus:border-[#00e5ff] outline-none"
         />
       </div>
 
       {/* Repository Cards Grid */}
       {filteredSaved.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
           {filteredSaved.map((item) => (
             <RepositoryCard
               key={item.id}

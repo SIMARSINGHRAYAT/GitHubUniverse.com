@@ -51,7 +51,8 @@ export default function GitCrazyPage() {
           if (data.user) {
             setUserSession(data.user);
             if (!data.user.isMock && destination) {
-              setScreen(destination);
+              const supportComplete = data.user.starredRepo && data.user.followedMaintainer;
+              setScreen(destination === "SUPPORT" && !supportComplete ? "SUPPORT" : "DASHBOARD");
             }
             return data.user;
           }
@@ -244,7 +245,7 @@ export default function GitCrazyPage() {
   return (
     <div className="min-h-screen bg-[#050508] text-white selection:bg-[#00ff66] selection:text-black relative overflow-x-hidden font-pixel-mono">
       {screen !== "WELCOME" && (
-        <PixelTitleBar onLogout={handleLogout} />
+          <PixelTitleBar onLogout={handleLogout} username={userSession.username} avatarUrl={userSession.avatarUrl} />
       )}
 
       {/* CRT Display Scanline Overlay */}
