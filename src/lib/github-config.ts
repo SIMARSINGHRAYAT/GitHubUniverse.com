@@ -4,19 +4,6 @@ export const GITHUB_SUPPORT_OWNER = "SIMARSINGHRAYAT";
 export const GITHUB_SUPPORT_REPOSITORY = "GitHubUniverse.com";
 
 export function getGitHubRedirectUri(requestUrl?: string): string {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (siteUrl) {
-    try {
-      const url = new URL(siteUrl.startsWith("http") ? siteUrl : `https://${siteUrl}`);
-      url.pathname = "/api/auth/github/callback";
-      url.search = "";
-      url.hash = "";
-      return url.toString().replace(/\/$/, "");
-    } catch {
-      // Fall through to the explicit callback URL.
-    }
-  }
-
   const configured = (process.env.GITHUB_REDIRECT_URI || process.env.NEXT_PUBLIC_GITHUB_REDIRECT_URI)?.trim();
   if (configured) {
     try {
@@ -26,7 +13,20 @@ export function getGitHubRedirectUri(requestUrl?: string): string {
       url.hash = "";
       return url.toString().replace(/\/$/, "");
     } catch {
-      // Ignore malformed environment values and resolve from the request URL.
+      // Fall through to the deployment URL.
+    }
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (siteUrl) {
+    try {
+      const url = new URL(siteUrl.startsWith("http") ? siteUrl : `https://${siteUrl}`);
+      url.pathname = "/api/auth/github/callback";
+      url.search = "";
+      url.hash = "";
+      return url.toString().replace(/\/$/, "");
+    } catch {
+      // Fall through to the request URL.
     }
   }
 
