@@ -1,25 +1,26 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { VERIFIED_QUOTES } from "@/lib/seed-repos";
 import { PixelButton } from "./PixelButton";
 
 interface WelcomeScreenProps {
   onGetStarted: () => void;
   errorMessage?: string | null;
+  isSigningIn?: boolean;
 }
 
-export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onGetStarted, errorMessage }) => {
-  const [quoteIdx, setQuoteIdx] = useState(0);
-
-  useEffect(() => {
-    setQuoteIdx(Math.floor(Math.random() * VERIFIED_QUOTES.length));
-  }, []);
+export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
+  onGetStarted,
+  errorMessage,
+  isSigningIn = false,
+}) => {
+  const [quoteIdx] = useState(() => Math.floor(Math.random() * VERIFIED_QUOTES.length));
 
   const currentQuote = VERIFIED_QUOTES[quoteIdx];
 
   return (
-    <div className="relative z-10 flex min-h-screen items-center justify-center bg-black px-4 py-12 text-center select-none">
+    <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-12 text-center select-none">
       <div className="relative z-10 w-full max-w-3xl">
         {errorMessage && (
           <p className="mb-4 text-[10px] uppercase tracking-[0.2em] text-red-400 font-pixel-mono">
@@ -53,9 +54,10 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onGetStarted, erro
             variant="green"
             size="lg"
             onClick={onGetStarted}
+            disabled={isSigningIn}
             className="min-w-[220px] tracking-[0.12em] font-pixel-heading"
           >
-            Get Started
+            {isSigningIn ? "Connecting..." : "Get Started"}
           </PixelButton>
         </div>
       </div>

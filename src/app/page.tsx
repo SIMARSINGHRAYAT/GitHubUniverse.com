@@ -17,6 +17,7 @@ export default function GitCrazyPage() {
   const [screen, setScreen] = useState<ScreenState>("WELCOME");
   const [showMsixModal, setShowMsixModal] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [isSigningIn, setIsSigningIn] = useState(false);
 
   // App Settings State
   const [settings, setSettings] = useState<AppSettings>({
@@ -81,7 +82,7 @@ export default function GitCrazyPage() {
     const authErrorCode = params.get("error");
 
     if (authErrorCode) {
-      setAuthError("GitHub sign-in failed. Please try again.");
+      window.setTimeout(() => setAuthError("GitHub sign-in failed. Please try again."), 0);
       if (window.history.replaceState) {
         const cleaned = window.location.search.replace(/[?&]error=[^&]+/, "");
         const nextUrl = cleaned ? `${window.location.pathname}${cleaned}` : window.location.pathname;
@@ -100,7 +101,9 @@ export default function GitCrazyPage() {
       });
     }
 
-    fetchSession();
+    if (!authSuccess) {
+      fetchSession();
+    }
     fetchSettings();
   }, []);
 
@@ -125,8 +128,12 @@ export default function GitCrazyPage() {
   // Real OAuth Authorization Redirect Action
   const handleSignInRealOAuth = async () => {
     setAuthError(null);
+    setIsSigningIn(true);
     try {
-      const res = await fetch("/api/auth/github/url");
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => controller.abort(), 10000);
+      const res = await fetch("/api/auth/github/url", { signal: controller.signal });
+      window.clearTimeout(timeoutId);
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body?.error || "Unable to generate GitHub OAuth URL");
@@ -140,7 +147,12 @@ export default function GitCrazyPage() {
       window.location.assign(data.url);
     } catch (err) {
       console.error("OAuth redirect error:", err);
-      setAuthError("GitHub OAuth is not configured. Please check the app environment settings.");
+      setAuthError(
+        err instanceof DOMException && err.name === "AbortError"
+          ? "GitHub sign-in timed out. Please try again."
+          : "GitHub OAuth is not configured. Please check the app environment settings."
+      );
+      setIsSigningIn(false);
     }
   };
 
@@ -225,7 +237,7 @@ export default function GitCrazyPage() {
       )}
 
       {/* CRT Display Scanline Overlay */}
-      <CrtOverlay enabled={settings.crtEnabled} />
+      <CrtOverlay enabled={screen !== "WELCOME" && settings.crtEnabled} />
 
       {/* Background Falling GitHub Rain Matrix */}
       <FallingGitHubRain
@@ -234,7 +246,13 @@ export default function GitCrazyPage() {
       />
 
       {/* Screen Views Flow */}
-      {screen === "WELCOME" && <WelcomeScreen onGetStarted={handleSignInRealOAuth} errorMessage={authError} />}
+      {screen === "WELCOME" && (
+        <WelcomeScreen
+          onGetStarted={handleSignInRealOAuth}
+          errorMessage={authError}
+          isSigningIn={isSigningIn}
+        />
+      )}
 
       {screen === "SUPPORT" && (
         <SupportScreen

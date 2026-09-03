@@ -115,7 +115,7 @@ export const FallingGitHubRain: React.FC<FallingGitHubRainProps> = ({
     };
 
     const render = () => {
-      ctx.fillStyle = "rgba(5, 5, 8, 0.2)";
+      ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
       ctx.fillRect(0, 0, width, height);
 
       drops.forEach((drop) => {
