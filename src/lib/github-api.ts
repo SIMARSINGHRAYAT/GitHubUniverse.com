@@ -242,13 +242,19 @@ export class GitHubRepositoryService {
 
 export class GitHubAuthService {
   static getOAuthUrl(clientId?: string): string {
-    const id = clientId || process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || "MOCK_CLIENT_ID";
+    const configuredClientId = clientId || process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || process.env.GITHUB_CLIENT_ID;
+    if (!configuredClientId) {
+      throw new Error("GITHUB_CLIENT_ID is not configured.");
+    }
+
     const redirectUri = typeof window !== "undefined" ? `${window.location.origin}/api/auth/github/callback` : "";
     const scope = "read:user user:follow public_repo";
     const state = Math.random().toString(36).substring(7);
 
-    return `https://github.com/login/oauth/authorize?client_id=${id}&redirect_uri=${encodeURIComponent(
-      redirectUri
-    )}&scope=${scope}&state=${state}`;
+    return `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(
+      configuredClientId
+    )}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(
+      state
+    )}`;
   }
 }

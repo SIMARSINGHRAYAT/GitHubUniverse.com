@@ -6,13 +6,12 @@ import { FallingGitHubRain } from "@/components/FallingGitHubRain";
 import { CrtOverlay } from "@/components/CrtOverlay";
 import { PixelTitleBar } from "@/components/PixelTitleBar";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
-import { OnboardingScreen } from "@/components/OnboardingScreen";
 import { SupportScreen } from "@/components/SupportScreen";
 import { DashboardView } from "@/components/DashboardView";
 import { MsixPackageModal } from "@/components/MsixPackageModal";
 import { soundManager } from "@/lib/sound";
 
-type ScreenState = "WELCOME" | "ONBOARDING" | "SUPPORT" | "DASHBOARD";
+type ScreenState = "WELCOME" | "SUPPORT" | "DASHBOARD";
 
 export default function GitCrazyPage() {
   const [screen, setScreen] = useState<ScreenState>("WELCOME");
@@ -71,6 +70,14 @@ export default function GitCrazyPage() {
       }
     };
 
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("auth") === "success") {
+      setScreen("DASHBOARD");
+      if (window.history.replaceState) {
+        window.history.replaceState({}, "", window.location.pathname);
+      }
+    }
+
     fetchSession();
     fetchSettings();
   }, []);
@@ -93,41 +100,20 @@ export default function GitCrazyPage() {
     }
   };
 
-  // Mock Login Action
-  const handleSignInMock = async (username: string) => {
-    try {
-      const res = await fetch("/api/auth/session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "mock_login",
-          username,
-        }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setUserSession(data.user);
-      }
-    } catch (err) {
-      console.error("Mock sign in error:", err);
-    }
-    setScreen("SUPPORT");
-  };
-
   // Real OAuth Authorization Redirect Action
   const handleSignInRealOAuth = async () => {
     try {
       const res = await fetch("/api/auth/github/url");
-      if (res.ok) {
-        const data = await res.json();
-        window.location.href = data.url;
-      } else {
-        // Fallback to mock session if OAuth URL generation fails
-        handleSignInMock("pixel_coder");
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body?.error || "Unable to generate GitHub OAuth URL");
       }
+
+      const data = await res.json();
+      window.location.href = data.url;
     } catch (err) {
       console.error("OAuth redirect error:", err);
-      handleSignInMock("pixel_coder");
+      alert("GitHub OAuth is not configured. Set GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET in your environment.");
     }
   };
 
@@ -200,15 +186,16 @@ export default function GitCrazyPage() {
 
   return (
     <div className="min-h-screen bg-[#050508] text-white selection:bg-[#00ff66] selection:text-black relative overflow-x-hidden font-pixel-mono">
-      {/* Top Retro Title Bar */}
-      <PixelTitleBar
-        soundEnabled={settings.soundEnabled}
-        setSoundEnabled={(val) => handleUpdateSettings({ soundEnabled: val })}
-        crtEnabled={settings.crtEnabled}
-        setCrtEnabled={(val) => handleUpdateSettings({ crtEnabled: val })}
-        onOpenMsixInfo={() => setShowMsixModal(true)}
-        username={userSession?.username}
-      />
+      {screen !== "WELCOME" && (
+        <PixelTitleBar
+          soundEnabled={settings.soundEnabled}
+          setSoundEnabled={(val) => handleUpdateSettings({ soundEnabled: val })}
+          crtEnabled={settings.crtEnabled}
+          setCrtEnabled={(val) => handleUpdateSettings({ crtEnabled: val })}
+          onOpenMsixInfo={() => setShowMsixModal(true)}
+          username={userSession?.username}
+        />
+      )}
 
       {/* CRT Display Scanline Overlay */}
       <CrtOverlay enabled={settings.crtEnabled} />
@@ -220,17 +207,7 @@ export default function GitCrazyPage() {
       />
 
       {/* Screen Views Flow */}
-      {screen === "WELCOME" && (
-        <WelcomeScreen onGetStarted={() => setScreen("ONBOARDING")} />
-      )}
-
-      {screen === "ONBOARDING" && (
-        <OnboardingScreen
-          onSignInMock={handleSignInMock}
-          onSignInRealOAuth={handleSignInRealOAuth}
-          onBack={() => setScreen("WELCOME")}
-        />
-      )}
+      {screen === "WELCOME" && <WelcomeScreen onGetStarted={handleSignInRealOAuth} />}
 
       {screen === "SUPPORT" && (
         <SupportScreen

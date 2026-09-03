@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Star, UserPlus, CheckCircle2, Lock, Unlock, Sparkles, ArrowRight } from "lucide-react";
 import { PixelButton } from "./PixelButton";
 import { soundManager } from "@/lib/sound";
+import { GITHUB_MAINTAINER_PROFILE_URL, STARTER_REPOSITORY_URL } from "@/lib/github-config";
 
 interface SupportScreenProps {
   userId: string;
@@ -37,6 +38,7 @@ export const SupportScreen: React.FC<SupportScreenProps> = ({
 
   const handleStarClick = async () => {
     soundManager.playStar();
+    window.open(STARTER_REPOSITORY_URL, "_blank", "noopener,noreferrer");
     setStarring(true);
     await onStar();
     setStarring(false);
@@ -44,15 +46,10 @@ export const SupportScreen: React.FC<SupportScreenProps> = ({
 
   const handleFollowClick = async () => {
     soundManager.playClick();
+    window.open(GITHUB_MAINTAINER_PROFILE_URL, "_blank", "noopener,noreferrer");
     setFollowing(true);
     await onFollow();
     setFollowing(false);
-  };
-
-  const handleQuickUnlock = async () => {
-    soundManager.playStar();
-    await onStar();
-    await onFollow();
   };
 
   return (
@@ -168,19 +165,6 @@ export const SupportScreen: React.FC<SupportScreenProps> = ({
             </div>
           </div>
         </div>
-
-        {/* Quick Dev Unlock shortcut */}
-        {!isUnlocked && (
-          <div className="mb-6">
-            <button
-              onClick={handleQuickUnlock}
-              className="text-[11px] text-gray-500 hover:text-[#00ff66] underline font-pixel-terminal flex items-center justify-center space-x-1 mx-auto"
-            >
-              <Sparkles className="w-3 h-3 text-[#ffcc00]" />
-              <span>[ DEV / QUICK UNLOCK BOTH ACTIONS ]</span>
-            </button>
-          </div>
-        )}
 
         {/* Continue to Dashboard Button */}
         <div>
