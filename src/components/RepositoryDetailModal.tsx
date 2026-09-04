@@ -37,10 +37,10 @@ export const RepositoryDetailModal: React.FC<RepositoryDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in font-pixel-mono">
-      <div className="pixel-panel w-full max-w-3xl max-h-[90vh] flex flex-col bg-[#0a0c12] border-3 border-[#00ff66] shadow-[8px_8px_0px_#000000]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm animate-fade-in font-pixel-mono">
+      <div className="pixel-panel flex h-full w-full flex-col bg-black/75 border border-[#00ff66] shadow-none">
         {/* Header */}
-        <div className="bg-[#121620] p-4 border-b-2 border-gray-800 flex items-center justify-between">
+        <div className="bg-black/65 p-6 border-b border-white/15 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <img
               src={repo.owner.avatarUrl}
@@ -48,10 +48,10 @@ export const RepositoryDetailModal: React.FC<RepositoryDetailModalProps> = ({
               className="w-10 h-10 border-2 border-[#00ff66] bg-gray-900 object-cover"
             />
             <div>
-              <span className="text-xs text-gray-400 block font-pixel-mono">
+              <span className="text-[18px] text-gray-400 block font-pixel-mono">
                 {repo.owner.login} /
               </span>
-              <h2 className="text-lg font-pixel-heading text-[#00ff66] tracking-wide">
+              <h2 className="text-[24px] font-pixel-heading text-[#00ff66] tracking-wide">
                 {repo.name}
               </h2>
             </div>
@@ -69,54 +69,54 @@ export const RepositoryDetailModal: React.FC<RepositoryDetailModalProps> = ({
         </div>
 
         {/* Content Scroll */}
-        <div className="p-6 overflow-y-auto flex-1 space-y-6 text-sm">
+        <div className="p-8 overflow-y-auto flex-1 space-y-8 text-[18px]">
           {/* Main Stats Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="bg-gray-900/90 border-2 border-gray-800 p-3 text-center">
-              <span className="text-xs text-gray-400 block mb-1 flex items-center justify-center space-x-1">
+            <div className="bg-black/60 border border-white/15 p-4 text-center">
+              <span className="text-[18px] text-gray-400 block mb-1 flex items-center justify-center space-x-1">
                 <Star className="w-3.5 h-3.5 text-[#ffcc00] fill-current" />
                 <span>STARS</span>
               </span>
-              <span className="text-lg font-pixel-heading text-[#ffcc00]">
+              <span className="text-[24px] font-pixel-heading text-[#ffcc00]">
                 {repo.stargazersCount.toLocaleString()}
               </span>
             </div>
 
-            <div className="bg-gray-900/90 border-2 border-gray-800 p-3 text-center">
-              <span className="text-xs text-gray-400 block mb-1 flex items-center justify-center space-x-1">
+            <div className="bg-black/60 border border-white/15 p-4 text-center">
+              <span className="text-[18px] text-gray-400 block mb-1 flex items-center justify-center space-x-1">
                 <GitFork className="w-3.5 h-3.5 text-[#00e5ff]" />
                 <span>FORKS</span>
               </span>
-              <span className="text-lg font-pixel-heading text-[#00e5ff]">
+              <span className="text-[24px] font-pixel-heading text-[#00e5ff]">
                 {repo.forksCount.toLocaleString()}
               </span>
             </div>
 
-            <div className="bg-gray-900/90 border-2 border-gray-800 p-3 text-center">
-              <span className="text-xs text-gray-400 block mb-1 flex items-center justify-center space-x-1">
+            <div className="bg-black/60 border border-white/15 p-4 text-center">
+              <span className="text-[18px] text-gray-400 block mb-1 flex items-center justify-center space-x-1">
                 <AlertCircle className="w-3.5 h-3.5 text-pink-400" />
                 <span>ISSUES</span>
               </span>
-              <span className="text-lg font-pixel-heading text-pink-400">
+              <span className="text-[24px] font-pixel-heading text-pink-400">
                 {repo.openIssuesCount.toLocaleString()}
               </span>
             </div>
 
-            <div className="bg-gray-900/90 border-2 border-gray-800 p-3 text-center">
-              <span className="text-xs text-gray-400 block mb-1 flex items-center justify-center space-x-1">
+            <div className="bg-black/60 border border-white/15 p-4 text-center">
+              <span className="text-[18px] text-gray-400 block mb-1 flex items-center justify-center space-x-1">
                 <Code className="w-3.5 h-3.5 text-[#00ff66]" />
                 <span>LANGUAGE</span>
               </span>
-              <span className="text-sm font-bold text-[#00ff66] truncate block mt-1">
+              <span className="text-[18px] font-bold text-[#00ff66] truncate block mt-1">
                 {repo.language || "N/A"}
               </span>
             </div>
           </div>
 
           {/* Description */}
-          <div className="bg-gray-950 border-2 border-gray-800 p-4">
-            <h3 className="text-xs font-pixel-heading text-gray-400 mb-2">PROJECT DESCRIPTION</h3>
-            <p className="text-sm text-gray-200 font-pixel-terminal leading-relaxed">
+          <div className="bg-black/60 border border-white/15 p-5">
+            <h3 className="text-[18px] font-pixel-heading text-gray-400 mb-3">PROJECT DESCRIPTION</h3>
+            <p className="text-[18px] text-gray-200 font-pixel-terminal leading-relaxed">
               {repo.description || "No detailed description provided for this repository."}
             </p>
           </div>
@@ -124,12 +124,12 @@ export const RepositoryDetailModal: React.FC<RepositoryDetailModalProps> = ({
           {/* Topics & Tags */}
           {repo.topics && repo.topics.length > 0 && (
             <div>
-              <h3 className="text-xs font-pixel-heading text-gray-400 mb-2">TOPICS</h3>
+              <h3 className="text-[18px] font-pixel-heading text-gray-400 mb-3">TOPICS</h3>
               <div className="flex flex-wrap gap-1.5">
                 {repo.topics.map((t, idx) => (
                   <span
                     key={idx}
-                    className="bg-gray-900 border border-[#00ff66]/40 text-[#00ff66] px-2 py-1 text-xs font-pixel-terminal"
+                    className="bg-black/60 border border-[#00ff66]/40 text-[#00ff66] px-3 py-2 text-[18px] font-pixel-terminal"
                   >
                     #{t}
                   </span>
@@ -139,15 +139,15 @@ export const RepositoryDetailModal: React.FC<RepositoryDetailModalProps> = ({
           )}
 
           {/* Metadata Info Box */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-pixel-terminal text-gray-300">
-            <div className="flex items-center space-x-2 bg-gray-900/50 p-2.5 border border-gray-800">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[18px] font-pixel-terminal text-gray-300">
+            <div className="flex items-center space-x-2 bg-black/60 p-3 border border-white/15">
               <Shield className="w-4 h-4 text-purple-400" />
               <span>
                 LICENSE: <strong className="text-white">{repo.license?.name || "None / Not specified"}</strong>
               </span>
             </div>
 
-            <div className="flex items-center space-x-2 bg-gray-900/50 p-2.5 border border-gray-800">
+            <div className="flex items-center space-x-2 bg-black/60 p-3 border border-white/15">
               <Calendar className="w-4 h-4 text-yellow-400" />
               <span>
                 UPDATED:{" "}
@@ -159,24 +159,25 @@ export const RepositoryDetailModal: React.FC<RepositoryDetailModalProps> = ({
           </div>
 
           {/* Code README Quick Preview snippet */}
-          <div className="bg-black border-2 border-[#00ff66]/30 p-4 font-mono text-xs text-green-400 space-y-2 overflow-x-auto">
-            <div className="flex items-center justify-between text-[10px] text-gray-500 border-b border-gray-800 pb-1">
+          <div className="bg-black/60 border border-[#00ff66]/30 p-5 font-mono text-[18px] text-green-400 space-y-3 overflow-x-auto">
+            <div className="flex items-center justify-between text-[18px] text-gray-500 border-b border-white/10 pb-2">
               <span>README.md Quick Preview</span>
               <span>BRANCH: {repo.defaultBranch || "main"}</span>
             </div>
-            <pre className="text-[11px] leading-relaxed font-pixel-terminal text-green-300">
+            <pre className="text-[18px] leading-relaxed font-pixel-terminal text-green-300">
               {`# ${repo.name}\n\n${repo.description || "A GitHub open-source repository."}\n\n## Getting Started\n\ngit clone ${repo.htmlUrl}.git\ncd ${repo.name}\n\n# Discover more famous repositories on GIT CRAZY platform 👾`}
             </pre>
           </div>
         </div>
 
         {/* Footer Actions */}
-        <div className="bg-[#121620] p-4 border-t-2 border-gray-800 flex flex-wrap items-center justify-between gap-3">
+        <div className="bg-black/65 p-5 border-t border-white/15 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center space-x-2">
             <PixelButton
               variant={isSaved ? "cyan" : "outline"}
               size="sm"
               onClick={() => onToggleSave(repo)}
+              className="bg-black/70 text-[18px]"
             >
               <Bookmark className={`w-3.5 h-3.5 mr-1 inline-block ${isSaved ? "fill-current" : ""}`} />
               {isSaved ? "SAVED" : "SAVE TO COLLECTION"}
@@ -186,12 +187,13 @@ export const RepositoryDetailModal: React.FC<RepositoryDetailModalProps> = ({
               variant={isPinned ? "yellow" : "outline"}
               size="sm"
               onClick={() => onTogglePin(repo)}
+              className="bg-black/70 text-[18px]"
             >
               <Pin className={`w-3.5 h-3.5 mr-1 inline-block ${isPinned ? "fill-current" : ""}`} />
               {isPinned ? "PINNED" : "PIN REPO"}
             </PixelButton>
 
-            <PixelButton variant="outline" size="sm" onClick={handleShare}>
+            <PixelButton variant="outline" size="sm" onClick={handleShare} className="bg-black/70 text-[18px]">
               {copied ? (
                 <>
                   <Check className="w-3.5 h-3.5 mr-1 inline-block text-green-400" />
@@ -211,7 +213,7 @@ export const RepositoryDetailModal: React.FC<RepositoryDetailModalProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => soundManager.playClick()}
-            className="pixel-btn pixel-btn-green text-xs flex items-center space-x-1.5"
+            className="pixel-btn bg-black/70 border-white/20 text-[18px] flex items-center space-x-1.5"
           >
             <span>OPEN ON GITHUB</span>
             <ExternalLink className="w-3.5 h-3.5" />

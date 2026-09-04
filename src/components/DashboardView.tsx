@@ -13,16 +13,13 @@ import {
 import { RepositoryCard } from "./RepositoryCard";
 import { RepositoryDetailModal } from "./RepositoryDetailModal";
 import { CollectionsView } from "./CollectionsView";
-import { PinnedView } from "./PinnedView";
 import { ExplorerView } from "./ExplorerView";
-import { SettingsView } from "./SettingsView";
 import { GitHubRepositoryService } from "@/lib/github-api";
 import {
   Search,
   Flame,
   Star,
   Bookmark,
-  Pin,
   Compass,
   Settings as SettingsIcon,
   SlidersHorizontal,
@@ -34,7 +31,6 @@ interface DashboardViewProps {
   appSettings: AppSettings;
   onUpdateSettings: (newSettings: Partial<AppSettings>) => void;
   onLogout: () => void;
-  onOpenMsixInfo: () => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -42,9 +38,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   appSettings,
   onUpdateSettings,
   onLogout,
-  onOpenMsixInfo,
 }) => {
-  const [activeTab, setActiveTab] = useState<"HOME" | "EXPLORE" | "COLLECTIONS" | "PINNED" | "SETTINGS">("HOME");
+  const [activeTab, setActiveTab] = useState<"HOME" | "EXPLORE" | "COLLECTIONS">("HOME");
   const [category, setCategory] = useState<CategoryKey | "ALL">("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
@@ -255,11 +250,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               key: "COLLECTIONS",
               label: `COLLECTION (${savedRepos.length})`,
               icon: <Bookmark className="w-3.5 h-3.5 text-[#00e5ff]" />,
-            },
-            {
-              key: "PINNED",
-              label: `PINNED (${savedRepos.filter((s) => s.isPinned).length})`,
-              icon: <Pin className="w-3.5 h-3.5 text-[#ffcc00]" />,
             },
           ].map((tab) => {
             const isSelected = activeTab === tab.key;
@@ -479,26 +469,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           />
         )}
 
-        {/* PINNED VIEW */}
-        {activeTab === "PINNED" && (
-          <PinnedView
-            savedRepos={savedRepos}
-            onViewDetails={(r) => setSelectedRepoModal(r)}
-            onToggleSave={handleToggleSave}
-            onTogglePin={handleTogglePin}
-          />
-        )}
-
-        {/* SETTINGS VIEW */}
-        {activeTab === "SETTINGS" && (
-          <SettingsView
-            settings={appSettings}
-            onUpdateSettings={onUpdateSettings}
-            userSession={userSession}
-            onLogout={onLogout}
-            onOpenMsixInfo={onOpenMsixInfo}
-          />
-        )}
       </main>
 
       {/* Repository Details Modal */}

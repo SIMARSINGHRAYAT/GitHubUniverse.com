@@ -76,10 +76,10 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
               }}
             />
             <div className="truncate">
-              <span className="text-[20px] text-gray-400 block truncate font-pixel-mono">
+              <span className="text-[24px] text-gray-400 block truncate font-pixel-mono">
                 {repo.owner.login} /
               </span>
-              <h3 className="text-[20px] font-bold text-white group-hover:text-[#00ff66] transition-colors truncate font-pixel-mono">
+              <h3 className="text-[24px] font-bold text-white group-hover:text-[#00ff66] transition-colors truncate font-pixel-mono">
                 {repo.name}
               </h3>
             </div>
@@ -111,13 +111,13 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
             {repo.topics.slice(0, 3).map((topic, i) => (
               <span
                 key={i}
-                className="bg-black/60 border border-white/15 text-gray-400 px-2 py-1 text-[20px] font-pixel-terminal hover:border-[#00ff66] hover:text-[#00ff66] transition-colors"
+                className="bg-black/60 border border-white/15 text-gray-400 px-2 py-1 text-[18px] font-pixel-terminal hover:border-[#00ff66] hover:text-[#00ff66] transition-colors"
               >
                 #{topic}
               </span>
             ))}
             {repo.topics.length > 3 && (
-                <span className="text-[20px] text-gray-500 font-pixel-terminal pt-0.5">
+                <span className="text-[18px] text-gray-500 font-pixel-terminal pt-0.5">
                 +{repo.topics.length - 3}
               </span>
             )}
@@ -127,7 +127,7 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
 
       {/* Footer Stats & Quick Actions */}
       <div className="pt-2 border-t border-gray-800/80">
-        <div className="flex items-center justify-between text-[20px] font-pixel-terminal text-gray-400 mb-4">
+        <div className="flex items-center justify-between text-[18px] font-pixel-terminal text-gray-400 mb-4">
           <div className="flex items-center space-x-3">
             {/* Stars */}
             <div className="flex items-center space-x-1 text-[#ffcc00]">
@@ -149,7 +149,7 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
                 className="w-2 h-2 rounded-none inline-block border border-black"
                 style={{ backgroundColor: getLanguageColor(repo.language) }}
               />
-              <span className="text-gray-300 text-[20px] font-pixel-mono">{repo.language}</span>
+              <span className="text-gray-300 text-[18px] font-pixel-mono">{repo.language}</span>
             </div>
           )}
         </div>
@@ -161,7 +161,7 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
               soundManager.playClick();
               onViewDetails(repo);
             }}
-            className="col-span-1 bg-black/65 hover:bg-[#00ff66] hover:text-black border border-white/15 text-gray-300 py-3 px-2 text-[20px] font-pixel-mono transition-colors flex items-center justify-center space-x-1"
+            className="col-span-1 bg-black/65 hover:bg-[#00ff66] hover:text-black border border-white/15 text-gray-300 py-3 px-2 text-[18px] font-pixel-mono transition-colors flex items-center justify-center space-x-1"
             title="View Details"
           >
             <span>VIEW</span>
@@ -172,7 +172,7 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
               e.stopPropagation();
               onToggleSave(repo);
             }}
-            className={`col-span-1 border py-3 px-2 text-[20px] font-pixel-mono transition-colors flex items-center justify-center space-x-1 ${
+            className={`col-span-1 border py-3 px-2 text-[18px] font-pixel-mono transition-colors flex items-center justify-center space-x-1 ${
               isSaved
                 ? "bg-black/70 border-[#00e5ff] text-[#00e5ff]"
                 : "bg-black/65 hover:border-[#00e5ff] hover:text-[#00e5ff] border-white/15 text-gray-300"
@@ -188,7 +188,7 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
               e.stopPropagation();
               onTogglePin(repo);
             }}
-            className={`col-span-1 border py-3 px-2 text-[20px] font-pixel-mono transition-colors flex items-center justify-center space-x-1 ${
+            className={`col-span-1 border py-3 px-2 text-[18px] font-pixel-mono transition-colors flex items-center justify-center space-x-1 ${
               isPinned
                 ? "bg-black/70 border-[#ffcc00] text-[#ffcc00]"
                 : "bg-black/65 hover:border-[#ffcc00] hover:text-[#ffcc00] border-white/15 text-gray-300"
@@ -201,7 +201,7 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
 
           <button
             onClick={handleShare}
-            className="col-span-1 bg-black/65 hover:bg-[#00ff66] hover:text-black border border-white/15 text-gray-300 py-3 px-2 text-[20px] font-pixel-mono transition-colors flex items-center justify-center"
+            className="col-span-1 bg-black/65 hover:bg-[#00ff66] hover:text-black border border-white/15 text-gray-300 py-3 px-2 text-[18px] font-pixel-mono transition-colors flex items-center justify-center"
             title="Share / Copy Link"
           >
             <Share2 className="w-3 h-3" />

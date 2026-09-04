@@ -278,7 +278,6 @@ export default function GitCrazyPage() {
           appSettings={settings}
           onUpdateSettings={handleUpdateSettings}
           onLogout={handleLogout}
-          onOpenMsixInfo={() => setShowMsixModal(true)}
         />
       )}
 

@@ -35,12 +35,17 @@ export class GitHubRepositoryService {
     }
 
     try {
-      // Build API search query
-      let searchQuery = "";
-      if (query.trim()) {
-        searchQuery += query.trim();
-      } else {
-        searchQuery += "stars:>1000";
+      const today = new Date().toISOString().slice(0, 10);
+      let searchQuery = query.trim() || "stars:>1000";
+
+      if (!query.trim()) {
+        if (category === "TRENDING") {
+          searchQuery = `stars:>100 pushed:>=${today}`;
+        } else if (category === "FAST_GROWING") {
+          searchQuery = `stars:>100 pushed:>=${today}`;
+        } else if (category === "MOST_STARRED" || category === "ALL") {
+          searchQuery = "stars:>1000";
+        }
       }
 
       if (language && language !== "ALL") {
@@ -50,33 +55,31 @@ export class GitHubRepositoryService {
       // Add category filters to query if applicable
       switch (category) {
         case "AI_ML":
-          searchQuery += " topic:ai OR topic:machine-learning OR topic:llm";
+          searchQuery += " (topic:ai OR topic:machine-learning OR topic:llm)";
           break;
         case "WEB_DEV":
-          searchQuery += " topic:react OR topic:web OR topic:frontend OR topic:typescript";
+          searchQuery += " (topic:react OR topic:web OR topic:frontend OR topic:typescript)";
           break;
         case "DEV_TOOLS":
-          searchQuery += " topic:cli OR topic:developer-tools OR topic:editor";
+          searchQuery += " (topic:cli OR topic:developer-tools OR topic:editor)";
           break;
         case "GAME_DEV":
-          searchQuery += " topic:gamedev OR topic:game-engine";
+          searchQuery += " (topic:gamedev OR topic:game-engine)";
           break;
         case "MOBILE":
-          searchQuery += " topic:mobile OR topic:flutter OR topic:react-native";
+          searchQuery += " (topic:mobile OR topic:flutter OR topic:react-native)";
           break;
         case "SYSTEMS":
-          searchQuery += " topic:systems OR topic:rust OR topic:c";
+          searchQuery += " (topic:systems OR topic:rust OR topic:c)";
           break;
       }
 
       let sortParam = "stars";
       let orderParam = "desc";
-      if (ranking === "RECENTLY_UPDATED") {
+      if (category === "FAST_GROWING" || ranking === "FASTEST_GROWING" || ranking === "RECENTLY_UPDATED") {
         sortParam = "updated";
       } else if (ranking === "NEW_PROJECTS") {
         sortParam = "created";
-      } else if (ranking === "FASTEST_GROWING") {
-        sortParam = "help-wanted-issues"; // GitHub sorting fallback
       }
 
       const headers: Record<string, string> = {
@@ -94,9 +97,7 @@ export class GitHubRepositoryService {
       const res = await fetch(url, { headers });
 
       if (res.status === 403 || res.status === 429) {
-        // Rate limited! Return mock data gracefully
-        const mockFallback = this.filterMockData(category, query, ranking, language);
-        return { repos: mockFallback, source: "mock", isRateLimited: true };
+        return { repos: [], source: "live", isRateLimited: true };
       }
 
       if (!res.ok) {
@@ -136,9 +137,8 @@ export class GitHubRepositoryService {
       apiCache.set(cacheKey, { data: repos, timestamp: Date.now() });
       return { repos, source: "live" };
     } catch (err) {
-      console.warn("GitHub API error, using mock dataset:", err);
-      const mockFallback = this.filterMockData(category, query, ranking, language);
-      return { repos: mockFallback, source: "mock" };
+      console.warn("GitHub API error:", err);
+      return { repos: [], source: "live" };
     }
   }
 
