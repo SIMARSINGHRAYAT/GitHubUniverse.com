@@ -261,7 +261,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               label: `PINNED (${savedRepos.filter((s) => s.isPinned).length})`,
               icon: <Pin className="w-3.5 h-3.5 text-[#ffcc00]" />,
             },
-            { key: "SETTINGS", label: "SETTINGS", icon: <SettingsIcon className="w-3.5 h-3.5 text-gray-400" /> },
           ].map((tab) => {
             const isSelected = activeTab === tab.key;
             return (
