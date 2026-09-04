@@ -25,7 +25,7 @@ extraResources:
 appx:
   applicationId: GitHubUniverse
   customManifestPath: appx-manifest.xml
-  identityName: GitHubUniverse.App
-  publisher: CN=GitHubUniverse
+  identityName: KILZSNIPPET.GitHubUniverse
+  publisher: CN=3B174D80-27C2-465C-82C4-8E24A3F5D93D
   publisherDisplayName: KILZSNIPPET
 

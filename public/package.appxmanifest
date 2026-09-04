@@ -4,9 +4,9 @@
          xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
          IgnorableNamespaces="uap mp">
 
-  <Identity Name="GitHubUniverse.App"
-            Publisher="CN=GitHubUniverse"
-            Version="1.0.2.0"
+  <Identity Name="KILZSNIPPET.GitHubUniverse"
+            Publisher="CN=3B174D80-27C2-465C-82C4-8E24A3F5D93D"
+            Version="1.0.3.0"
             ProcessorArchitecture="x64" />
 
   <Properties>
