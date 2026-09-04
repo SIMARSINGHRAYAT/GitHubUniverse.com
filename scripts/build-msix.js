@@ -10,12 +10,13 @@ const manifestPath = path.join(__dirname, "../public/package.appxmanifest");
 const assetPaths = [
   "build/icon.ico",
   "build/icon.png",
-  "build/Assets/StoreLogo.png",
-  "build/Assets/Square44x44Logo.png",
-  "build/Assets/Square150x150Logo.png",
-  "build/Assets/Square310x310Logo.png",
-  "build/Assets/Wide310x150Logo.png",
-  "build/Assets/SplashScreen.png",
+  "build/appx/StoreLogo.png",
+  "build/appx/Square44x44Logo.png",
+  "build/appx/Square71x71Logo.png",
+  "build/appx/Square150x150Logo.png",
+  "build/appx/Square310x310Logo.png",
+  "build/appx/Wide310x150Logo.png",
+  "build/appx/SplashScreen.png",
 ];
 
 if (!fs.existsSync(builderConfigPath)) {
