@@ -81,7 +81,7 @@ It contains the signed x64 MSIX, the public `GitHubUniverse-Local.cer`, the pass
 First open `GitHubUniverse-Local.cer`, choose **Install Certificate**, select **Local Machine**, and place it in **Trusted People**. Then open PowerShell as Administrator and run:
 
 ```powershell
-Add-AppxPackage -Path ".\GitHubUniverse-1.0.0-x64.msix"
+	Add-AppxPackage -Path ".\GitHubUniverse-1.0.2-x64.msix"
 ```
 
 The local test certificate is self-signed and must not be used for Partner Center submission. Partner Center requires a package signed by the Microsoft Store or an approved production certificate.

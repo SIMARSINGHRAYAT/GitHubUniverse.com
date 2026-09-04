@@ -39,7 +39,9 @@ const manifest = fs.readFileSync(manifestPath, "utf8");
 const manifestReferences = [
   "GitHubUniverse.App",
   'ProcessorArchitecture="x64"',
-  "Version=\"1.0.1.0\"",
+  "Version=\"1.0.2.0\"",
+  "PublisherDisplayName>KILZSNIPPET</PublisherDisplayName>",
+  "MinVersion=\"10.0.17763.0\"",
   "assets/StoreLogo.png",
   "assets/Square44x44Logo.png",
   "assets/Square150x150Logo.png",
@@ -54,6 +56,6 @@ if (missingManifestReferences.length > 0) {
 console.log("✓ electron-builder.yml validated successfully.");
 console.log("✓ package.appxmanifest identity and asset references validated successfully.");
 console.log("✓ Windows icon and tile assets validated successfully.");
-console.log("✓ Identity: GitHubUniverse.App (v1.0.1.0 x64)");
+console.log("✓ Identity: GitHubUniverse.App (v1.0.2.0 x64, Windows 10 1809+)");
 console.log("✓ Windows 10/11 Target SDK Ready!");
 console.log("==========================================");

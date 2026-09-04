@@ -27,5 +27,5 @@ appx:
   customManifestPath: appx-manifest.xml
   identityName: GitHubUniverse.App
   publisher: CN=GitHubUniverse
-  publisherDisplayName: GitHub Universe
+  publisherDisplayName: KILZSNIPPET
 

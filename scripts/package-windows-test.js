@@ -7,6 +7,8 @@ const outputDir = path.join(projectRoot, "dist");
 const certificatePath = path.join(projectRoot, "certs", "GitHubUniverse-Local-Test.pfx");
 const certificatePassword = process.env.MSIX_CERT_PASSWORD;
 const bundleDir = path.join(process.env.USERPROFILE || process.env.HOME, "Downloads", "GitHubUniverse-MSIX-Test");
+const packageMetadata = JSON.parse(fs.readFileSync(path.join(projectRoot, "package.json"), "utf8"));
+const expectedMsix = `GitHubUniverse-${packageMetadata.version}-x64.msix`;
 
 function findFile(root, fileName) {
   if (!fs.existsSync(root)) return null;
@@ -32,6 +34,11 @@ if (!certificatePassword) {
 }
 
 fs.mkdirSync(bundleDir, { recursive: true });
+if (fs.existsSync(outputDir)) {
+  for (const file of fs.readdirSync(outputDir)) {
+    if (file.toLowerCase().endsWith(".msix")) fs.rmSync(path.join(outputDir, file), { force: true });
+  }
+}
 execFileSync("npm.cmd", ["run", "build:msix"], {
   cwd: projectRoot,
   env: {
@@ -43,10 +50,10 @@ execFileSync("npm.cmd", ["run", "build:msix"], {
   stdio: "inherit",
 });
 
-const msix = fs.readdirSync(outputDir).find((file) => file.toLowerCase().endsWith(".msix"));
-if (!msix) {
-  throw new Error(`No MSIX package was produced in ${outputDir}`);
+if (!fs.existsSync(path.join(outputDir, expectedMsix))) {
+  throw new Error(`Expected MSIX package was not produced: ${path.join(outputDir, expectedMsix)}`);
 }
+const msix = expectedMsix;
 
 const sdkRoot = "C:\\Program Files (x86)\\Windows Kits\\10\\bin";
 const sdkVersions = fs.existsSync(sdkRoot) ? fs.readdirSync(sdkRoot).sort().reverse() : [];

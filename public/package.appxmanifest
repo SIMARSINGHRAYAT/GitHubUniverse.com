@@ -6,18 +6,18 @@
 
   <Identity Name="GitHubUniverse.App"
             Publisher="CN=GitHubUniverse"
-            Version="1.0.1.0"
+            Version="1.0.2.0"
             ProcessorArchitecture="x64" />
 
   <Properties>
     <DisplayName>GitHub Universe</DisplayName>
-    <PublisherDisplayName>GitHub Universe</PublisherDisplayName>
+    <PublisherDisplayName>KILZSNIPPET</PublisherDisplayName>
     <Logo>assets/StoreLogo.png</Logo>
     <Description>Worldwide discovery, collection, bookmarking, and tracking platform for famous GitHub repositories.</Description>
   </Properties>
 
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.22621.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
   </Dependencies>
 
   <Capabilities>
