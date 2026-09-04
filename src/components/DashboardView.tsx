@@ -234,7 +234,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   ];
 
   return (
-    <div className="relative z-10 min-h-[calc(100vh-2.5rem)] flex flex-col font-pixel-mono text-white pb-12">
+    <div className="relative z-10 flex min-h-dvh w-full flex-col pb-12 font-pixel-mono text-white">
       {/* Primary Desktop Top Bar Navigation */}
       <nav className="sticky top-0 z-40 flex h-16 w-full min-w-0 flex-nowrap items-center gap-4 overflow-visible border-b border-white/10 bg-black/75 px-5 backdrop-blur-sm">
         {/* Navigation Tabs */}

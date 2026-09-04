@@ -1,6 +1,6 @@
-# Git Crazy — Windows MSIX & APPX Packaging Guide
+# GitHub Universe — Windows MSIX Packaging Guide
 
-Welcome to **Git Crazy** (`GIT CRAZY`), a worldwide discovery, collection, bookmarking, and tracking platform for GitHub repositories packaged as a production-ready Windows MSIX/APPX application with a pixel-art retro computing operating aesthetic.
+This guide covers the Windows MSIX test package for **GitHub Universe**, a GitHub repository discovery application with a pixel-art retro computing aesthetic.
 
 ---
 
@@ -56,39 +56,41 @@ npm run build
 
 ---
 
-## 5. Building Production Windows MSIX & APPX Package
+## 5. Building the Windows MSIX Test Package
 
 To assemble the Windows application package:
 
 ```bash
-# Verify package manifest
+# Verify packaging metadata
 node scripts/build-msix.js
 
-# Build MSIX package
-npm run build:msix
+# Build the signed local test package and copy it to Downloads
+$env:MSIX_CERT_PASSWORD = "GitHubUniverseLocal2026!"
+npm run package:windows-test
 ```
 
-The output MSIX installer will be generated at:
-`./dist/GitCrazy_1.0.0.0_x64.msix`
+The output bundle is generated at:
+`%USERPROFILE%\Downloads\GitHubUniverse-MSIX-Test`
+
+It contains the signed x64 MSIX, the public `GitHubUniverse-Local.cer`, the password-protected test PFX, and `INSTALL-TEST-PACKAGE.md`.
 
 ---
 
 ## 6. Installing Local MSIX Package via PowerShell
 
-Open PowerShell as Administrator and run:
+First open `GitHubUniverse-Local.cer`, choose **Install Certificate**, select **Local Machine**, and place it in **Trusted People**. Then open PowerShell as Administrator and run:
 
 ```powershell
-Add-AppxPackage -Path ".\dist\GitCrazy_1.0.0.0_x64.msix"
+Add-AppxPackage -Path ".\GitHubUniverse-1.0.0-x64.msix"
 ```
 
-To launch the installed application:
-Press `Win + S` and search for **Git Crazy**!
+The local test certificate is self-signed and must not be used for Partner Center submission. Partner Center requires a package signed by the Microsoft Store or an approved production certificate.
 
 ---
 
 ## 7. Application Architecture
 
-- **Visual Style**: Pixel retro-computing system with 8-bit typography, falling GitHub Octocat rain, and CRT scanlines.
+- **Visual Style**: Pixel retro-computing system with 8-bit typography, falling GitHub rain, and CRT scanlines.
 - **Database**: PostgreSQL via Drizzle ORM storing users, custom collections, saved repos, pinned items, and settings.
 - **Audio Synthesizer**: Web Audio API retro 8-bit sound effects.
 - **Service Abstraction**: Live GitHub REST API proxy with automatic rate-limit fallback to curated seed dataset.

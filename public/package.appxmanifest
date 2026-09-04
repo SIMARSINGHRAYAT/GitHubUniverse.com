@@ -4,15 +4,15 @@
          xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
          IgnorableNamespaces="uap mp">
 
-  <Identity Name="GitCrazy.App"
-            Publisher="CN=GitCrazy, O=GitCrazy Platform, C=US"
-            Version="1.0.0.0"
+  <Identity Name="GitHubUniverse.App"
+            Publisher="CN=GitHubUniverse"
+            Version="1.0.1.0"
             ProcessorArchitecture="x64" />
 
   <Properties>
-    <DisplayName>Git Crazy</DisplayName>
-    <PublisherDisplayName>Git Crazy Maintainers</PublisherDisplayName>
-    <Logo>Assets/StoreLogo.png</Logo>
+    <DisplayName>GitHub Universe</DisplayName>
+    <PublisherDisplayName>GitHub Universe</PublisherDisplayName>
+    <Logo>assets/StoreLogo.png</Logo>
     <Description>Worldwide discovery, collection, bookmarking, and tracking platform for famous GitHub repositories.</Description>
   </Properties>
 
@@ -25,13 +25,14 @@
   </Capabilities>
 
   <Applications>
-    <Application Id="GitCrazy" Executable="GitCrazy.exe" EntryPoint="GitCrazy.App">
-      <uap:VisualElements DisplayName="Git Crazy"
-                          Description="A pixel-powered worldwide GitHub discovery platform"
+    <Application Id="GitHubUniverse" Executable="GitHub Universe.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="GitHub Universe"
+                          Description="A pixel-powered GitHub repository discovery platform"
                           BackgroundColor="#050508"
-                          Square150x150Logo="Assets/Square150x150Logo.png"
-                          Square44x44Logo="Assets/Square44x44Logo.png">
-        <uap:SplashScreen Image="Assets/SplashScreen.png" />
+                          Square150x150Logo="assets/Square150x150Logo.png"
+                          Square44x44Logo="assets/Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="assets/Wide310x150Logo.png" />
+        <uap:SplashScreen Image="assets/SplashScreen.png" />
       </uap:VisualElements>
     </Application>
   </Applications>

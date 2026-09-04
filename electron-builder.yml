@@ -13,10 +13,14 @@ files:
   - package.json
 
 win:
-  icon: GitHub Universe Pixel Space Badge.png
+  icon: icon.ico
   target:
     - target: appx
       arch: [x64]
+
+extraResources:
+  - from: build/icon.ico
+    to: icon.ico
 
 appx:
   applicationId: GitHubUniverse

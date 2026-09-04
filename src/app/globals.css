@@ -33,6 +33,19 @@ body {
   image-rendering: pixelated;
 }
 
+html,
+body {
+  width: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+#__next {
+  width: 100%;
+  min-height: 100dvh;
+}
+
 /* Pixel Font Utility Classes */
 .font-pixel-heading {
   font-family: var(--font-press-start), monospace;

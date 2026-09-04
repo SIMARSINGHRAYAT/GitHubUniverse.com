@@ -2,24 +2,57 @@ const fs = require("fs");
 const path = require("path");
 
 console.log("==========================================");
-console.log("   GIT CRAZY — MSIX PACKAGING VALIDATOR   ");
+console.log("   GITHUB UNIVERSE — MSIX PACKAGING VALIDATOR   ");
 console.log("==========================================");
 
-const manifestPath = path.join(__dirname, "../public/package.appxmanifest");
 const builderConfigPath = path.join(__dirname, "../electron-builder.yml");
-
-if (!fs.existsSync(manifestPath)) {
-  console.error("❌ ERROR: AppxManifest.xml missing at:", manifestPath);
-  process.exit(1);
-}
+const manifestPath = path.join(__dirname, "../public/package.appxmanifest");
+const assetPaths = [
+  "build/icon.ico",
+  "build/icon.png",
+  "build/Assets/StoreLogo.png",
+  "build/Assets/Square44x44Logo.png",
+  "build/Assets/Square150x150Logo.png",
+  "build/Assets/Square310x310Logo.png",
+  "build/Assets/Wide310x150Logo.png",
+  "build/Assets/SplashScreen.png",
+];
 
 if (!fs.existsSync(builderConfigPath)) {
   console.error("❌ ERROR: electron-builder.yml missing at:", builderConfigPath);
   process.exit(1);
 }
 
-console.log("✓ package.appxmanifest validated successfully.");
+if (!fs.existsSync(manifestPath)) {
+  console.error("ERROR: package.appxmanifest is missing at:", manifestPath);
+  process.exit(1);
+}
+
+const missingAssets = assetPaths.filter((assetPath) => !fs.existsSync(path.join(__dirname, "..", assetPath)));
+if (missingAssets.length > 0) {
+  console.error("ERROR: Required Windows assets are missing:", missingAssets.join(", "));
+  process.exit(1);
+}
+
+const manifest = fs.readFileSync(manifestPath, "utf8");
+const manifestReferences = [
+  "GitHubUniverse.App",
+  'ProcessorArchitecture="x64"',
+  "Version=\"1.0.1.0\"",
+  "assets/StoreLogo.png",
+  "assets/Square44x44Logo.png",
+  "assets/Square150x150Logo.png",
+  "assets/Wide310x150Logo.png",
+];
+const missingManifestReferences = manifestReferences.filter((reference) => !manifest.includes(reference));
+if (missingManifestReferences.length > 0) {
+  console.error("ERROR: AppX manifest is missing:", missingManifestReferences.join(", "));
+  process.exit(1);
+}
+
 console.log("✓ electron-builder.yml validated successfully.");
-console.log("✓ Identity: GitCrazy.App (v1.0.0.0 x64/ARM64)");
+console.log("✓ package.appxmanifest identity and asset references validated successfully.");
+console.log("✓ Windows icon and tile assets validated successfully.");
+console.log("✓ Identity: GitHubUniverse.App (v1.0.1.0 x64)");
 console.log("✓ Windows 10/11 Target SDK Ready!");
 console.log("==========================================");

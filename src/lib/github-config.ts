@@ -1,5 +1,6 @@
 export const GITHUB_MAINTAINER_PROFILE_URL = "https://github.com/SIMARSINGHRAYAT";
 export const STARTER_REPOSITORY_URL = "https://github.com/SIMARSINGHRAYAT/GitHubUniverse.com";
+export const PRIVACY_POLICY_URL = "https://git-hub-universe-com-nu.vercel.app/privacy";
 export const GITHUB_SUPPORT_OWNER = "SIMARSINGHRAYAT";
 export const GITHUB_SUPPORT_REPOSITORY = "GitHubUniverse.com";
 

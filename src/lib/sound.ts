@@ -1,4 +1,4 @@
-// Web Audio API Retro 8-Bit Sound Synthesizer for Git Crazy
+// Web Audio API retro 8-bit sound synthesizer for GitHub Universe
 
 class SoundManager {
   private ctx: AudioContext | null = null;

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { PRIVACY_POLICY_URL } from "@/lib/github-config";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | GitHub Universe",
   description: "Privacy Policy for GitHub Universe.",
+  alternates: { canonical: PRIVACY_POLICY_URL },
 };
 
 const lastUpdated = "September 4, 2026";
@@ -61,7 +63,7 @@ export default function PrivacyPolicyPage() {
 
           <section>
             <h2 className="font-pixel-heading text-base leading-loose text-[#ffcc00]">9. Changes to This Policy</h2>
-            <p className="mt-3">We may update this policy when the service or applicable requirements change. The updated policy will be published at this URL with a new revision date.</p>
+            <p className="mt-3">We may update this policy when the service or applicable requirements change. The updated policy will be published at <a className="text-[#00e5ff] underline decoration-[#00e5ff] underline-offset-4 hover:text-[#00ff66]" href={PRIVACY_POLICY_URL}>this privacy policy URL</a> with a new revision date.</p>
           </section>
 
           <section className="border-t-2 border-[#1f2937] pt-8">

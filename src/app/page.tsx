@@ -242,7 +242,7 @@ export default function GitCrazyPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050508] text-white selection:bg-[#00ff66] selection:text-black relative overflow-x-hidden font-pixel-mono">
+    <div className="relative min-h-dvh w-full overflow-x-hidden bg-[#050508] text-white selection:bg-[#00ff66] selection:text-black font-pixel-mono">
       {/* CRT Display Scanline Overlay */}
       <CrtOverlay enabled={screen !== "WELCOME" && settings.crtEnabled} />
 

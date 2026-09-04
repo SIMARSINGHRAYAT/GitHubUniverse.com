@@ -12,19 +12,19 @@ export const MsixPackageModal: React.FC<MsixPackageModalProps> = ({ onClose }) =
   const [copiedCmd, setCopiedCmd] = useState(false);
   const [activeTab, setActiveTab] = useState<"manifest" | "ps" | "builder">("manifest");
 
-  const powershellCmd = `Add-AppxPackage -Path ".\\dist\\GitHubUniverse_1.0.0.0_x64.msix"`;
+  const powershellCmd = `Add-AppxPackage -Path ".\\dist\\GitHubUniverse-1.0.0-x64.msix"`;
 
   const manifestXml = `<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
          xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
          xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10">
   <Identity Name="GitHubUniverse.App"
-            Publisher="CN=GitHubUniverse, O=GitHubUniverse, C=US"
-            Version="1.0.0.0"
+            Publisher="CN=GitHubUniverse"
+            Version="1.0.1.0"
             ProcessorArchitecture="x64" />
   <Properties>
-    <DisplayName>GitHubUniverse</DisplayName>
-    <PublisherDisplayName>GitHubUniverse Maintainers</PublisherDisplayName>
+    <DisplayName>GitHub Universe</DisplayName>
+    <PublisherDisplayName>GitHub Universe</PublisherDisplayName>
     <Logo>Assets/StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
@@ -32,8 +32,8 @@ export const MsixPackageModal: React.FC<MsixPackageModalProps> = ({ onClose }) =
   </Dependencies>
   <Applications>
     <Application Id="GitHubUniverse" Executable="GitHubUniverse.exe" EntryPoint="GitHubUniverse.App">
-      <uap:VisualElements DisplayName="GitHubUniverse"
-                          Description="Worldwide Discovery and Collection Platform for GitHub Repositories"
+      <uap:VisualElements DisplayName="GitHub Universe"
+              Description="A pixel-powered GitHub repository discovery platform"
                           BackgroundColor="#050508"
                           Square150x150Logo="Assets/Square150x150Logo.png"
                           Square44x44Logo="Assets/Square44x44Logo.png">
@@ -115,7 +115,7 @@ export const MsixPackageModal: React.FC<MsixPackageModalProps> = ({ onClose }) =
             <div className="space-y-3">
               <div className="flex items-center justify-between text-gray-400 text-[11px]">
                 <span>VALID WINDOWS 10 / 11 DESKTOP PACKAGE MANIFEST</span>
-                <span className="text-blue-400">Architecture: x64 / ARM64</span>
+                <span className="text-blue-400">Architecture: x64</span>
               </div>
               <pre className="bg-black border border-gray-800 p-4 text-[11px] text-blue-300 font-mono overflow-x-auto leading-relaxed">
                 {manifestXml}
@@ -145,7 +145,7 @@ export const MsixPackageModal: React.FC<MsixPackageModalProps> = ({ onClose }) =
                 <h4 className="font-pixel-heading text-blue-400 text-xs">BUILDING MSIX FROM CLI:</h4>
                 <p>1. Ensure Node.js & Windows SDK environment tools are installed.</p>
                 <p>2. Run <code className="text-[#00ff66]">npm run build:msix</code> in terminal.</p>
-                <p>3. Output installer saved to <code className="text-[#00e5ff]">./dist/GitCrazy_1.0.0.0_x64.msix</code>.</p>
+                <p>3. Output installer saved to <code className="text-[#00e5ff]">./dist/GitHubUniverse-1.0.0-x64.msix</code>.</p>
               </div>
             </div>
           )}

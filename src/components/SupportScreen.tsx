@@ -63,7 +63,7 @@ export const SupportScreen: React.FC<SupportScreenProps> = ({
   };
 
   return (
-    <div className="relative z-10 min-h-[calc(100vh-2.5rem)] flex flex-col items-center justify-center p-6 text-center select-none font-pixel-mono">
+    <div className="relative z-10 flex min-h-dvh w-full flex-col items-center justify-center p-6 text-center select-none font-pixel-mono">
       <div className="pixel-panel max-w-xl w-full p-8 sm:p-10 relative bg-black/65 border border-white/20 shadow-[10px_10px_0px_#000000]">
         
         {/* Header Badge */}

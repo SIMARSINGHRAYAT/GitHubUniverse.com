@@ -68,7 +68,7 @@ export class GitHubRepositoryService {
 
       const headers: Record<string, string> = {
         Accept: "application/vnd.github.v3+json",
-        "User-Agent": "GitCrazy-App",
+        "User-Agent": "GitHubUniverse-App",
       };
       if (token) {
         headers["Authorization"] = `token ${token}`;
