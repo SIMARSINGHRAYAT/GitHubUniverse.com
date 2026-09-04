@@ -1,24 +1,26 @@
 appId: com.githubuniverse.app
-productName: GitHubUniverse
-copyright: Copyright © 2025 GitHubUniverse Maintainers
+productName: GitHub Universe
+copyright: Copyright © 2026 GitHub Universe Maintainers
 
 directories:
   output: dist
   buildResources: build
 
-win:
-  target:
-    - target: msix
-      arch:
-        - x64
-        - arm64
-    - target: appx
-      arch:
-        - x64
+artifactName: GitHubUniverse-${version}-${arch}.msix
 
-msix:
-  identityName: GitHubUniverse.App
-  publisher: CN=GitHubUniverse, O=GitHubUniverse Platform, C=US"
-  publisherDisplayName: GitHubUniverse Maintainers
+files:
+  - electron/**
+  - package.json
+
+win:
+  icon: GitHub Universe Pixel Space Badge.png
+  target:
+    - target: appx
+      arch: [x64]
+
+appx:
   applicationId: GitHubUniverse
-  packageName: GitHubUniverse
+  identityName: GitHubUniverse.App
+  publisher: CN=GitHubUniverse
+  publisherDisplayName: GitHub Universe
+

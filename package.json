@@ -1,12 +1,17 @@
 {
   "name": "github-universe",
+  "version": "1.0.0",
+  "description": "A desktop wrapper for the GitHub Universe repository discovery website.",
+  "author": "GitHub Universe",
+  "main": "electron/main.cjs",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:msix": "electron-builder --win appx --x64 --config electron-builder.yml"
   },
   "dependencies": {
     "dotenv": "17.3.1",
@@ -23,7 +28,11 @@
     "@types/pg": "8.18.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
+    "electron": "^41.0.0",
+    "electron-builder": "^26.0.12",
     "drizzle-kit": "0.31.10",
+    "electron": "^44.2.0",
+    "electron-builder": "^26.15.3",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
     "postcss": "8.5.8",
