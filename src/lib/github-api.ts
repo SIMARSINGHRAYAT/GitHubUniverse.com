@@ -35,14 +35,14 @@ export class GitHubRepositoryService {
     }
 
     try {
-      const today = new Date().toISOString().slice(0, 10);
+      const recentDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString().slice(0, 10);
       let searchQuery = query.trim() || "stars:>1000";
 
       if (!query.trim()) {
         if (category === "TRENDING") {
-          searchQuery = `stars:>100 pushed:>=${today}`;
+          searchQuery = `stars:>100 pushed:>=${recentDate}`;
         } else if (category === "FAST_GROWING") {
-          searchQuery = `stars:>100 pushed:>=${today}`;
+          searchQuery = `stars:>100 pushed:>=${recentDate}`;
         } else if (category === "MOST_STARRED" || category === "ALL") {
           searchQuery = "stars:>1000";
         }

@@ -79,7 +79,7 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
               <span className="text-sm text-gray-400 block truncate font-pixel-mono">
                 {repo.owner.login} /
               </span>
-              <h3 className="text-[24px] font-bold text-white group-hover:text-[#00ff66] transition-colors truncate font-pixel-mono">
+              <h3 className="text-[28px] leading-tight font-bold text-white group-hover:text-[#00ff66] transition-colors truncate font-pixel-mono">
                 {repo.name}
               </h3>
             </div>
@@ -101,7 +101,7 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
         </div>
 
         {/* Description */}
-        <p className="text-[18px] text-gray-300 mb-4 leading-[1.5] font-pixel-terminal min-h-[3.5rem]">
+        <p className="text-[20px] text-gray-300 mb-4 leading-[1.5] font-pixel-terminal min-h-[3.5rem]">
           {repo.description || "No description provided for this GitHub project."}
         </p>
 

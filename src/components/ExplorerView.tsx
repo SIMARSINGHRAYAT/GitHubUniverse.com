@@ -16,6 +16,7 @@ interface ExplorerViewProps {
   savedRepoIds: Set<string>;
   pinnedRepoIds: Set<string>;
   loading?: boolean;
+  onRetry: () => void;
 }
 
 export const ExplorerView: React.FC<ExplorerViewProps> = ({
@@ -28,6 +29,7 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
   savedRepoIds,
   pinnedRepoIds,
   loading = false,
+  onRetry,
 }) => {
   const algorithms: { key: RankingAlgorithm; label: string; icon: React.ReactNode; desc: string }[] = [
     { key: "TRENDING", label: "TRENDING", icon: <Flame className="w-4 h-4 text-orange-400" />, desc: "High velocity momentum" },
@@ -86,7 +88,7 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
 
       {/* Loading or Cards Grid */}
       {loading ? (
-        <div className="p-12 text-center bg-gray-950/80 border-2 border-gray-800">
+        <div className="p-12 text-center bg-black/65 border border-white/15">
           <div className="inline-block w-8 h-8 border-3 border-[#00ff66] border-t-transparent animate-spin mb-3" />
           <h3 className="text-xs font-pixel-heading text-[#00ff66] animate-pulse">
             SCANNING THE REPOSITORY UNIVERSE...
@@ -110,11 +112,14 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
           ))}
         </div>
       ) : (
-        <div className="p-12 text-center bg-gray-950/80 border-2 border-gray-800">
+        <div className="p-12 text-center bg-black/65 border border-white/15">
           <h3 className="text-xs font-pixel-heading text-gray-300">NO REPOSITORIES MATCHED</h3>
           <p className="text-xs text-gray-500 font-pixel-terminal mt-1">
             Try switching ranking algorithms or clearing search filters.
           </p>
+          <button type="button" onClick={onRetry} className="pixel-btn mt-5 bg-black/70 text-sm">
+            SEARCH AGAIN
+          </button>
         </div>
       )}
     </div>

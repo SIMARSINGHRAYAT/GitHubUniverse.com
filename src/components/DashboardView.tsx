@@ -56,6 +56,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const [explorerLoading, setExplorerLoading] = useState(false);
   const [selectedRepoModal, setSelectedRepoModal] = useState<GitHubRepository | null>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [retryNonce, setRetryNonce] = useState(0);
 
   // Debounce search query input
   useEffect(() => {
@@ -112,7 +113,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     return () => {
       isMounted = false;
     };
-  }, [category, debouncedQuery, selectedLanguage, appSettings.useLiveApi]);
+  }, [category, debouncedQuery, selectedLanguage, appSettings.useLiveApi, retryNonce]);
 
   // Fetch Repositories for EXPLORE view based on Ranking Algorithm
   useEffect(() => {
@@ -134,7 +135,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     return () => {
       isMounted = false;
     };
-  }, [explorerRanking, activeTab, appSettings.useLiveApi]);
+  }, [explorerRanking, activeTab, appSettings.useLiveApi, retryNonce]);
 
   // Save / Unsave Repo
   const handleToggleSave = async (repo: GitHubRepository) => {
@@ -397,7 +398,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             {/* Repositories Cards Grid */}
             {loading ? (
-              <div className="p-16 text-center bg-gray-950/80 border-2 border-gray-800">
+              <div className="p-16 text-center bg-black/65 border border-white/15">
                 <div className="inline-block w-8 h-8 border-3 border-[#00ff66] border-t-transparent animate-spin mb-3" />
                 <h3 className="text-xs font-pixel-heading text-[#00ff66] animate-pulse">
                   LOADING GITHUB DATA...
@@ -421,20 +422,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 ))}
               </div>
             ) : (
-              <div className="p-16 text-center bg-gray-950/80 border-2 border-gray-800 space-y-2">
+              <div className="p-16 text-center bg-black/65 border border-white/15 space-y-2">
                 <h3 className="text-sm font-pixel-heading text-gray-300">NO REPOSITORIES FOUND</h3>
                 <p className="text-xs text-gray-500 font-pixel-terminal">
                   THE GITHUB UNIVERSE IS QUIET HERE FOR &quot;{debouncedQuery || category}&quot;.
                 </p>
                 <button
                   onClick={() => {
-                    setSearchQuery("");
-                    setCategory("ALL");
-                    setSelectedLanguage("ALL");
+                    setRetryNonce((value) => value + 1);
                   }}
-                  className="pixel-btn pixel-btn-green text-xs mt-3 inline-block"
+                  className="pixel-btn bg-black/70 text-sm mt-3 inline-block"
                 >
-                  [ SEARCH AGAIN / RESET ]
+                  SEARCH AGAIN
                 </button>
               </div>
             )}
@@ -453,6 +452,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             savedRepoIds={savedRepoIds}
             pinnedRepoIds={pinnedRepoIds}
             loading={explorerLoading}
+            onRetry={() => setRetryNonce((value) => value + 1)}
           />
         )}
 
