@@ -23,7 +23,9 @@ import {
   Compass,
   Settings as SettingsIcon,
   SlidersHorizontal,
+  ShieldCheck,
 } from "lucide-react";
+import { PRIVACY_POLICY_URL } from "@/lib/github-config";
 import { soundManager } from "@/lib/sound";
 
 interface DashboardViewProps {
@@ -319,6 +321,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <img src={userSession.avatarUrl} alt="" className="h-9 w-9 border border-[#00ff66] object-cover" />
                 )}
                 <span className="truncate text-sm text-white">@{userSession.username}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => window.location.assign(PRIVACY_POLICY_URL)}
+                className="mb-1 flex w-full items-center gap-2 border-b border-white/10 px-3 py-2 text-left text-xs text-gray-300 transition-colors hover:bg-[#00e5ff] hover:text-black"
+              >
+                <ShieldCheck className="h-4 w-4" />
+                <span>PRIVACY POLICY</span>
               </button>
               <button
                 type="button"

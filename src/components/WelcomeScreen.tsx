@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { VERIFIED_QUOTES } from "@/lib/seed-repos";
-import { PRIVACY_POLICY_URL } from "@/lib/github-config";
 import { PixelButton } from "./PixelButton";
 
 interface WelcomeScreenProps {
@@ -59,13 +58,6 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             className="min-w-[240px] text-base tracking-[0.1em] font-pixel-heading"
           >
             {isSigningIn ? "Connecting..." : "Get Started"}
-
-        <a
-          href={PRIVACY_POLICY_URL}
-          className="mt-8 inline-block text-xs uppercase tracking-[0.12em] text-gray-400 underline underline-offset-4 hover:text-[#00e5ff]"
-        >
-          Privacy Policy
-        </a>
           </PixelButton>
         </div>
       </div>

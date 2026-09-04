@@ -24,6 +24,7 @@ extraResources:
 
 appx:
   applicationId: GitHubUniverse
+  customManifestPath: appx-manifest.xml
   identityName: GitHubUniverse.App
   publisher: CN=GitHubUniverse
   publisherDisplayName: GitHub Universe
