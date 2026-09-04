@@ -229,13 +229,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     { key: "TRENDING", label: "TRENDING" },
     { key: "MOST_STARRED", label: "MOST STARRED" },
     { key: "FAST_GROWING", label: "FAST GROWING" },
-    { key: "AI_ML", label: "AI & ML" },
-    { key: "WEB_DEV", label: "WEB DEV" },
-    { key: "DEV_TOOLS", label: "DEV TOOLS" },
+    { key: "TOP_REPOSITORY_OF_DAY", label: "NUMBER ONE REPOSITORY OF THE DAY" },
     { key: "OPEN_SOURCE", label: "OPEN SOURCE" },
-    { key: "MOBILE", label: "MOBILE" },
-    { key: "SYSTEMS", label: "SYSTEMS" },
-    { key: "GAME_DEV", label: "GAME DEV" },
   ];
 
   return (

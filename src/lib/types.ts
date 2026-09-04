@@ -77,16 +77,10 @@ export interface AppSettings {
 export type CategoryKey =
   | "TRENDING"
   | "MOST_STARRED"
-  | "MOST_FORKED"
   | "FAST_GROWING"
-  | "NEW_INTERESTING"
-  | "AI_ML"
-  | "WEB_DEV"
-  | "DEV_TOOLS"
+  | "TOP_REPOSITORY_OF_DAY"
   | "OPEN_SOURCE"
-  | "MOBILE"
-  | "SYSTEMS"
-  | "GAME_DEV";
+  ;
 
 export type RankingAlgorithm =
   | "TRENDING"

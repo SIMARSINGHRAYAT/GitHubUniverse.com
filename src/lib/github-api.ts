@@ -5,7 +5,7 @@ const GITHUB_API_BASE = "https://api.github.com";
 
 // Simple in-memory cache
 const apiCache = new Map<string, { data: unknown; timestamp: number }>();
-const CACHE_TTL_MS = 1000 * 60 * 15; // 15 minutes cache
+const CACHE_TTL_MS = 1000 * 60 * 5;
 
 export class GitHubRepositoryService {
   /**
@@ -43,6 +43,10 @@ export class GitHubRepositoryService {
           searchQuery = `stars:>100 pushed:>=${recentDate}`;
         } else if (category === "FAST_GROWING") {
           searchQuery = `stars:>100 pushed:>=${recentDate}`;
+        } else if (category === "TOP_REPOSITORY_OF_DAY") {
+          searchQuery = `stars:>100 pushed:>=${new Date().toISOString().slice(0, 10)}`;
+        } else if (category === "OPEN_SOURCE") {
+          searchQuery = "stars:>1000 license:mit";
         } else if (category === "MOST_STARRED" || category === "ALL") {
           searchQuery = "stars:>1000";
         }
@@ -52,31 +56,11 @@ export class GitHubRepositoryService {
         searchQuery += ` language:${language}`;
       }
 
-      // Add category filters to query if applicable
-      switch (category) {
-        case "AI_ML":
-          searchQuery += " (topic:ai OR topic:machine-learning OR topic:llm)";
-          break;
-        case "WEB_DEV":
-          searchQuery += " (topic:react OR topic:web OR topic:frontend OR topic:typescript)";
-          break;
-        case "DEV_TOOLS":
-          searchQuery += " (topic:cli OR topic:developer-tools OR topic:editor)";
-          break;
-        case "GAME_DEV":
-          searchQuery += " (topic:gamedev OR topic:game-engine)";
-          break;
-        case "MOBILE":
-          searchQuery += " (topic:mobile OR topic:flutter OR topic:react-native)";
-          break;
-        case "SYSTEMS":
-          searchQuery += " (topic:systems OR topic:rust OR topic:c)";
-          break;
-      }
-
       let sortParam = "stars";
       let orderParam = "desc";
-      if (category === "FAST_GROWING" || ranking === "FASTEST_GROWING" || ranking === "RECENTLY_UPDATED") {
+      if (category === "TRENDING" || ranking === "TRENDING") {
+        sortParam = "forks";
+      } else if (category === "FAST_GROWING" || ranking === "FASTEST_GROWING" || ranking === "RECENTLY_UPDATED") {
         sortParam = "updated";
       } else if (ranking === "NEW_PROJECTS") {
         sortParam = "created";
@@ -174,45 +158,8 @@ export class GitHubRepositoryService {
         case "MOST_STARRED":
           result = result.sort((a, b) => b.stargazersCount - a.stargazersCount);
           break;
-        case "MOST_FORKED":
-          result = result.sort((a, b) => b.forksCount - a.forksCount);
-          break;
-        case "NEW_INTERESTING":
-          result = result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-          break;
-        case "AI_ML":
-          result = result.filter(
-            (r) =>
-              r.topics.some((t) => ["ai", "llm", "machine-learning", "deep-learning"].includes(t.toLowerCase())) ||
-              r.name.includes("ollama") ||
-              r.name.includes("ComfyUI") ||
-              r.name.includes("vllm")
-          );
-          break;
-        case "WEB_DEV":
-          result = result.filter((r) =>
-            r.topics.some((t) => ["react", "nextjs", "frontend", "tailwindcss", "web"].includes(t.toLowerCase()))
-          );
-          break;
-        case "DEV_TOOLS":
-          result = result.filter((r) =>
-            r.topics.some((t) => ["cli", "editor", "bundler", "package-manager", "developer-tools"].includes(t.toLowerCase()))
-          );
-          break;
-        case "GAME_DEV":
-          result = result.filter((r) =>
-            r.topics.some((t) => ["gamedev", "game-engine", "2d", "3d", "pixijs"].includes(t.toLowerCase()))
-          );
-          break;
-        case "MOBILE":
-          result = result.filter((r) =>
-            r.topics.some((t) => ["mobile", "flutter", "react", "dart"].includes(t.toLowerCase()))
-          );
-          break;
-        case "SYSTEMS":
-          result = result.filter((r) =>
-            r.topics.some((t) => ["kernel", "linux", "systems-programming", "rust", "zig", "c"].includes(t.toLowerCase()))
-          );
+        case "TOP_REPOSITORY_OF_DAY":
+          result = result.sort((a, b) => b.stargazersCount - a.stargazersCount);
           break;
         case "OPEN_SOURCE":
           result = result.filter((r) => r.license !== null);
