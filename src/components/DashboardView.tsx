@@ -60,6 +60,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const [loading, setLoading] = useState(true);
   const [explorerLoading, setExplorerLoading] = useState(false);
   const [selectedRepoModal, setSelectedRepoModal] = useState<GitHubRepository | null>(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   // Debounce search query input
   useEffect(() => {
@@ -244,9 +245,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   return (
     <div className="relative z-10 min-h-[calc(100vh-2.5rem)] flex flex-col font-pixel-mono text-white pb-12">
       {/* Primary Desktop Top Bar Navigation */}
-      <nav className="grid grid-cols-1 items-center gap-4 border-b border-white/10 bg-black/65 px-5 py-4 sticky top-14 z-40 md:grid-cols-[1fr_minmax(280px,620px)_1fr] md:gap-6">
+      <nav className="sticky top-0 z-40 flex h-16 w-full min-w-0 flex-nowrap items-center gap-4 overflow-visible border-b border-white/10 bg-black/75 px-5 backdrop-blur-sm">
         {/* Navigation Tabs */}
-        <div className="flex items-center space-x-1.5 overflow-x-auto">
+        <div className="flex min-w-0 shrink-0 items-center gap-1.5 overflow-x-auto">
           {[
             { key: "HOME", label: "HOME", icon: <Flame className="w-3.5 h-3.5 text-orange-400" /> },
             { key: "EXPLORE", label: "EXPLORE", icon: <Compass className="w-3.5 h-3.5 text-[#00ff66]" /> },
@@ -284,7 +285,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Global Search Bar Input */}
-        <div className="flex items-center space-x-2 min-w-0">
+        <div className="flex min-w-[180px] flex-1 items-center space-x-2">
           <div className="relative w-full">
             <Search className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-2.5" />
             <input
@@ -303,6 +304,46 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </button>
             )}
           </div>
+        </div>
+
+        <div className="relative shrink-0">
+          <button
+            type="button"
+            onClick={() => setShowUserMenu((current) => !current)}
+            className="flex items-center gap-2 border border-white/20 bg-black/60 px-3 py-2 text-xs text-gray-300 transition-colors hover:border-[#00ff66] hover:text-[#00ff66]"
+            aria-expanded={showUserMenu}
+            aria-label="Open profile settings"
+          >
+            {userSession.avatarUrl ? (
+              <img src={userSession.avatarUrl} alt="" className="h-5 w-5 border border-[#00ff66] object-cover" />
+            ) : (
+              <SettingsIcon className="h-4 w-4" />
+            )}
+            <span className="hidden lg:inline">@{userSession.username}</span>
+            <SettingsIcon className="h-4 w-4" />
+          </button>
+
+          {showUserMenu && (
+            <div className="absolute right-0 top-full mt-2 w-56 border border-white/20 bg-black/95 p-2 shadow-[4px_4px_0_#00ff66]">
+              <button
+                type="button"
+                onClick={() => window.location.assign(`https://github.com/${encodeURIComponent(userSession.username)}`)}
+                className="mb-1 flex w-full items-center gap-3 border-b border-white/10 px-3 py-3 text-left transition-colors hover:bg-white/10"
+              >
+                {userSession.avatarUrl && (
+                  <img src={userSession.avatarUrl} alt="" className="h-9 w-9 border border-[#00ff66] object-cover" />
+                )}
+                <span className="truncate text-sm text-white">@{userSession.username}</span>
+              </button>
+              <button
+                type="button"
+                onClick={onLogout}
+                className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-gray-300 transition-colors hover:bg-[#00ff66] hover:text-black"
+              >
+                <span>LOG OUT</span>
+              </button>
+            </div>
+          )}
         </div>
       </nav>
 

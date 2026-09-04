@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { UserSession, AppSettings } from "@/lib/types";
 import { FallingGitHubRain } from "@/components/FallingGitHubRain";
 import { CrtOverlay } from "@/components/CrtOverlay";
-import { PixelTitleBar } from "@/components/PixelTitleBar";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { SupportScreen } from "@/components/SupportScreen";
 import { DashboardView } from "@/components/DashboardView";
@@ -244,10 +243,6 @@ export default function GitCrazyPage() {
 
   return (
     <div className="min-h-screen bg-[#050508] text-white selection:bg-[#00ff66] selection:text-black relative overflow-x-hidden font-pixel-mono">
-      {screen !== "WELCOME" && (
-          <PixelTitleBar onLogout={handleLogout} username={userSession.username} avatarUrl={userSession.avatarUrl} />
-      )}
-
       {/* CRT Display Scanline Overlay */}
       <CrtOverlay enabled={screen !== "WELCOME" && settings.crtEnabled} />
 
